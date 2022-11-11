@@ -32,6 +32,7 @@ int capa_eau = 1000000;
 void mainJeu() {
 
     initialiserPlateau(plateau);
+    //liresauv("../sauvgarde.txt", plateau);
 
     while (!WindowShouldClose()) {
         Image ruine;
@@ -139,7 +140,6 @@ void mainJeu() {
                                         rec_construire_route);
 
 
-            // cabane = LoadImage("Cabane.png");
 
 
         afficherEtatMonde(monde, afficher_message_reset_routes);
@@ -147,7 +147,6 @@ void mainJeu() {
         dessinertout(timer);
         EndDrawing();
         }
-
     sauvegarde("../sauvgarde.txt", plateau);
 }
 

@@ -70,27 +70,30 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
 }
 
 
+void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
+    FILE *ifs = fopen(nomFichier, "r");
+
+    for (int i = 0; i < NB_CASE_HAUTEUR; ++i) {
+        for (int j = 0; j < NB_CASE_LARGEUR; ++j) {
+            fscanf(ifs, "%d", &tab[i][j].etat);
+        }
+    }
+    printf("Fin fonction sauvegarde\n");
+
+    fclose(ifs);
+}
+
 void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
-    //FILE *ifs = fopen("../sauvgarde.txt", "w");
-    int filedesc = open(nomFichier, O_WRONLY | O_APPEND);
     FILE *ifs = fopen(nomFichier, "w");
-    //write(filedesc, "Begin :\n", 7);
-
-
-
     for (int i = 0; i < NB_CASE_HAUTEUR; ++i) {
         for (int j = 0; j < NB_CASE_LARGEUR; ++j) {
             fprintf(ifs, "%d ", (tab[i][j].etat));
         }
         fprintf(ifs, "\n");
     }
-    printf("Fin fonction\n");
+    printf("Fin fonction sauvegarde\n");
 
     fclose(ifs);
-}
-
-void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
-
 }
 
 void resetTimer(float *timer) {
