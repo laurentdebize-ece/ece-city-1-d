@@ -3,4 +3,7 @@ project(ece_city_1_d C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(ece_city_1_d main.c)
+add_subdirectory(raylib)
+
+add_executable(ece_city_1_d main.c jeu.c)
+target_link_libraries(ece_city_1_d raylib)
