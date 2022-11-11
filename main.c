@@ -148,11 +148,12 @@ void mainJeu() {
         EndDrawing();
         }
 
-        sauvegarde("../sauvgarde.txt", plateau);
-    }
+    sauvegarde("../sauvgarde.txt", plateau);
+}
 
-    int main() {
-        mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
 
-        return 0;
-    }
+int main() {
+    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
+
+    return 0;
+}
