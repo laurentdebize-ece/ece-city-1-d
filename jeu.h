@@ -30,6 +30,32 @@ typedef struct {
     Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
 } Gen;
 
+typedef struct {
+    char* fileName;
+    int numCaseX, numCaseY;
+    float tempsDuPlacement;
+    int nbHabitants;
+    bool vivable;
+    int eau, electricite;
+    int evolution;
+}Maison;
+
+typedef struct {
+    int numMaison;
+    int ressourcesAlim;
+}MaisonAlim;
+
+typedef struct {
+    char* fileName;
+    int numCaseX, numCaseY;
+    int ressource;
+    int capaciteMax;
+    int capaciteutilise;
+    int nbMaisonAlim;
+    MaisonAlim tabMaisonAlim[20];
+}Central;
+
+
 
 /////////////////////////////// Main ////////////////////////////////////////////
 int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste);

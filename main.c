@@ -17,6 +17,7 @@ int monde_elec;
 
 Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
 souris souris1;
+Maison maison1[100];
 
 
 int reset_routes;
@@ -109,7 +110,7 @@ void mainJeu() {
                 monde = 1;
             } else if (CheckCollisionPointRec(mouse_pos, rec_blue)) {
                 monde = 2;
-            } else if (IsKeyPressed(KEY_ENTER)) {
+            } else if (IsKeyPressed(KEY_ENTER)) {   // peut etre le deplacé en dehors parceque faut appuyer sur la souris pour que ça marche
                 monde = 0;
             }
 

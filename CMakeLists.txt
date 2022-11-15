@@ -5,5 +5,5 @@ set(CMAKE_C_STANDARD 99)
 
 add_subdirectory(raylib)
 
-add_executable(ece_city_1_d main.c jeu.c)
+add_executable(ece_city_1_d main.c jeu.c jeu.h)
 target_link_libraries(ece_city_1_d raylib)
