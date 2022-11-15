@@ -17,6 +17,7 @@ typedef struct {
     int largeur;
     int etat;
     int etatInterdit;
+    int batiment;
 } Case;
 
 typedef struct {

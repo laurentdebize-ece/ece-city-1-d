@@ -17,6 +17,10 @@ int monde_elec;
 int nbMaisons;
 int verificationConstructionMaison = 0;
 bool veutConstruireCabane = false;
+int verificationConstructionCentral = 0;
+bool veutConstruireCentral = false;
+int verificationConstructionChateau = 0;
+bool veutConstruireChateau = false;
 
 Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
 souris souris1;
@@ -96,9 +100,19 @@ void mainJeu() {
                     }
                 }
                 if(plateau[i][j].etat == 2){
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
+                }
+                if(plateau[i][j].batiment == 1){
+                    //afficher l'image
+                }
+                if(plateau[i][j].etat == 7){
                     DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, YELLOW);
                 }
+                if(plateau[i][j].etat == 8){
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, BLUE);
+                }
             }
+
         }
 
 
@@ -151,6 +165,7 @@ void mainJeu() {
                     }
                 }
                 if(verificationConstructionMaison==0){
+                    plateau[souris1.caseY][souris1.caseX].batiment = 1;
                     for (int i = 0; i < 3; ++i) {
                         for (int j = 0; j < 3; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 2;
@@ -159,6 +174,72 @@ void mainJeu() {
                 }
             }
         }
+
+        if (CheckCollisionPointRec(mouse_pos, rec_construire_centrale)) {
+            //DrawRectangle(0,0,50,50,RED);
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                if(veutConstruireCentral)
+                    veutConstruireCentral = false;
+                else
+                    veutConstruireCentral = true;
+            }
+
+        }
+        if (veutConstruireCentral){
+            verificationConstructionCentral = 0;
+            DrawRectangle(50,0,50,50,YELLOW);
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+                for (int i = 0; i < 6; ++i) {
+                    for (int j = 0; j < 4; ++j) {
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
+                            verificationConstructionCentral++;
+                        }
+                    }
+                }
+                if(verificationConstructionCentral==0){
+                    plateau[souris1.caseY][souris1.caseX].batiment = 7;
+                    for (int i = 0; i < 6; ++i) {
+                        for (int j = 0; j < 4; ++j) {
+                            plateau[souris1.caseY+j][souris1.caseX+i].etat = 7;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau)) {
+            //DrawRectangle(0,0,50,50,RED);
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                if(veutConstruireChateau)
+                    veutConstruireChateau = false;
+                else
+                    veutConstruireChateau = true;
+            }
+
+        }
+        if (veutConstruireChateau){
+            verificationConstructionChateau = 0;
+            DrawRectangle(100,0,50,50,BLUE);
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+                for (int i = 0; i < 4; ++i) {
+                    for (int j = 0; j < 6; ++j) {
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
+                            verificationConstructionChateau++;
+                        }
+                    }
+                }
+                if(verificationConstructionChateau==0){
+                    plateau[souris1.caseY][souris1.caseX].batiment = 8;
+                    for (int i = 0; i < 4; ++i) {
+                        for (int j = 0; j < 6; ++j) {
+                            plateau[souris1.caseY+j][souris1.caseX+i].etat = 8;
+                        }
+                    }
+                }
+            }
+        }
+
+
 
 
 
