@@ -165,7 +165,6 @@ void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
         for (int j = 0; j < 45; j++) {
             if (plateau[i][j].etat == 0) {
                 DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, WHITE);
-
             }
         }
     }

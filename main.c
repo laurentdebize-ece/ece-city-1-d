@@ -14,6 +14,9 @@ int credits;
 float timer = 5;
 int monde_eau;
 int monde_elec;
+int nbMaisons;
+int verificationConstructionMaison = 0;
+bool veutConstruireCabane = false;
 
 Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
 souris souris1;
@@ -92,6 +95,9 @@ void mainJeu() {
                         plateau[i][j].etat = 1;
                     }
                 }
+                if(plateau[i][j].etat == 2){
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, YELLOW);
+                }
             }
         }
 
@@ -122,6 +128,40 @@ void mainJeu() {
                 reset_routes = false;
             }
         }
+
+        if (CheckCollisionPointRec(mouse_pos, rec_construire_cabane)) {
+            //DrawRectangle(0,0,50,50,RED);
+            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+                if(veutConstruireCabane)
+                    veutConstruireCabane = false;
+                else
+                    veutConstruireCabane = true;
+            }
+
+        }
+        if (veutConstruireCabane){
+            verificationConstructionMaison = 0;
+            DrawRectangle(0,0,50,50,RED);
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 3; ++j) {
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
+                            verificationConstructionMaison++;
+                        }
+                    }
+                }
+                if(verificationConstructionMaison==0){
+                    for (int i = 0; i < 3; ++i) {
+                        for (int j = 0; j < 3; ++j) {
+                            plateau[souris1.caseY+j][souris1.caseX+i].etat = 2;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
 
         DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
         DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
