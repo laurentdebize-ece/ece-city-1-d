@@ -150,13 +150,16 @@ void mainJeu() {
                     veutConstruireCabane = false;
                 else
                     veutConstruireCabane = true;
+
+                veutConstruireChateau = false;
+                veutConstruireCentral = false;
             }
 
         }
         if (veutConstruireCabane){
             verificationConstructionMaison = 0;
             DrawRectangle(0,0,50,50,RED);
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
                 for (int i = 0; i < 3; ++i) {
                     for (int j = 0; j < 3; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
@@ -182,16 +185,20 @@ void mainJeu() {
                     veutConstruireCentral = false;
                 else
                     veutConstruireCentral = true;
+
+                veutConstruireChateau = false;
+                veutConstruireCabane = false;
+
             }
 
         }
         if (veutConstruireCentral){
             verificationConstructionCentral = 0;
             DrawRectangle(50,0,50,50,YELLOW);
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
                 for (int i = 0; i < 6; ++i) {
                     for (int j = 0; j < 4; ++j) {
-                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+6>NB_CASE_LARGEUR || souris1.caseY+4>NB_CASE_HAUTEUR)){
                             verificationConstructionCentral++;
                         }
                     }
@@ -214,16 +221,19 @@ void mainJeu() {
                     veutConstruireChateau = false;
                 else
                     veutConstruireChateau = true;
+
+                veutConstruireCabane = false;
+                veutConstruireCentral = false;
             }
 
         }
         if (veutConstruireChateau){
             verificationConstructionChateau = 0;
             DrawRectangle(100,0,50,50,BLUE);
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau) {
                 for (int i = 0; i < 4; ++i) {
                     for (int j = 0; j < 6; ++j) {
-                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+4>NB_CASE_LARGEUR || souris1.caseY+6>NB_CASE_HAUTEUR)){
                             verificationConstructionChateau++;
                         }
                     }
