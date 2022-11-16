@@ -246,18 +246,32 @@ void initialiserbatiment(Maison batiment){
     Image centrale;
     Image chateau_d_eau;
 
+    ruine = LoadImage("../batiments/Ruine.png");
+    terrain_vague = LoadImage("../batiments/Terrain_vague.png");
     cabane = LoadImage("../batiments/Cabane.png");
+    maison = LoadImage("../batiments/Maison.png");
+    immeuble = LoadImage("../batiments/Immeuble.png");
+    gratte_ciel = LoadImage("../batiments/Gratte_ciel.png");
     centrale = LoadImage("../batiments/Centrale_electrique_2.png");
     chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
-
 
     Texture2D texture3 = LoadTextureFromImage(cabane);
     Texture2D texture4 = LoadTextureFromImage(centrale);
     Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
+    Texture2D texture6 = LoadTextureFromImage(ruine);
+    Texture2D texture7 = LoadTextureFromImage(terrain_vague);
+    Texture2D texture8 = LoadTextureFromImage(maison);
+    Texture2D texture9 = LoadTextureFromImage(immeuble);
+    Texture2D texture10 = LoadTextureFromImage(gratte_ciel);
 
     UnloadImage(cabane);
     UnloadImage(centrale);
     UnloadImage(chateau_d_eau);
+    UnloadImage(terrain_vague);
+    UnloadImage(ruine);
+    UnloadImage(maison);
+    UnloadImage(immeuble);
+    UnloadImage(gratte_ciel);
 
     if(batiment.evolution == 0) {
             batiment.nbHabitants = 0;}
@@ -271,3 +285,8 @@ void initialiserbatiment(Maison batiment){
         batiment.nbHabitants = 1000;}
 
 }
+//Centrale : 100 000 ECE-flouz
+//- Château d’eau : 100 000 ECE-flouz
+//- Route : 10 ECE-flouz par unité de grille
+//- Terrain vague : 1000 ECE-flouz
+//Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
