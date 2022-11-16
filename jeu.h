@@ -57,6 +57,7 @@ typedef struct {
     int capaciteutilise;
     int nbMaisonAlim;
     MaisonAlim tabMaisonAlim[20];
+    int prix;
 }Central;
 
 

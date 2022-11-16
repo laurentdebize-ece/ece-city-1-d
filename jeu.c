@@ -278,13 +278,12 @@ void initialiserbatiment(Maison batiment){
 //Centrale : 100 000 ECE-flouz
 //- Château d’eau : 100 000 ECE-flouz
 //- Route : 10 ECE-flouz par unité de grille
-//- Terrain vague : 1000 ECE-flouz
-//Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
+
 
 void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
 
     for(int i = 0; i < nbMaisons; i ++) {
-        if (maison1[i].tempsDuPlacement < 15) {
+        if (maison1[i].tempsDuPlacement < 15 &&maison1[i].prix >= 10000 ) { // Terrain vague : 1000 ECE-flouz
             maison1[i].evolution = 0;
             maison1[i].nbHabitants = 0;
         }
@@ -303,8 +302,9 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
         if(maison1[i].tempsDuPlacement >= 60 || maison1[i].tempsDuPlacement < 75)
             maison1[i].evolution = 4;
         maison1[i].nbHabitants = 1000;
-
-
+    }
+    for(int i = 0; i < maison1[i].nbHabitants; i++){
+        monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
     }
 
 }
