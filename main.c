@@ -22,6 +22,7 @@ bool veutConstruireCentral = false;
 int verificationConstructionChateau = 0;
 bool veutConstruireChateau = false;
 
+
 Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
 souris souris1;
 Maison maison1[100];
@@ -43,14 +44,7 @@ void mainJeu() {
     //liresauv("../sauvgarde.txt", plateau);
 
     while (!WindowShouldClose()) {
-        Image ruine;
-        Image terrain_vague;
-        Image cabane;
-        Image maison;
-        Image immeuble;
-        Image gratte_ciel;
-        Image centrale;
-        Image chateau_d_eau;
+
 
         Vector2 mouse_pos = GetMousePosition();
 

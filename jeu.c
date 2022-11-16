@@ -234,3 +234,40 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes){
 void dessinertout(float timer) {
     DrawText(TextFormat("timer: %.0f", timer), 840, 0, 20, WHITE);
 }
+
+void initialiserbatiment(Maison batiment){
+
+    Image ruine;
+    Image terrain_vague;
+    Image cabane;
+    Image maison;
+    Image immeuble;
+    Image gratte_ciel;
+    Image centrale;
+    Image chateau_d_eau;
+
+    cabane = LoadImage("../batiments/Cabane.png");
+    centrale = LoadImage("../batiments/Centrale_electrique_2.png");
+    chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
+
+
+    Texture2D texture3 = LoadTextureFromImage(cabane);
+    Texture2D texture4 = LoadTextureFromImage(centrale);
+    Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
+
+    UnloadImage(cabane);
+    UnloadImage(centrale);
+    UnloadImage(chateau_d_eau);
+
+    if(batiment.evolution == 0) {
+            batiment.nbHabitants = 0;}
+    if(batiment.evolution == 1) {
+        batiment.nbHabitants = 10;}
+    if(batiment.evolution == 2) {
+        batiment.nbHabitants = 50;}
+    if(batiment.evolution == 3) {
+        batiment.nbHabitants = 100;}
+    if(batiment.evolution == 4) {
+        batiment.nbHabitants = 1000;}
+
+}

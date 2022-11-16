@@ -41,6 +41,7 @@ typedef struct {
     int evolution;
 }Maison;
 
+
 typedef struct {
     int numMaison;
     int ressourcesAlim;
@@ -103,5 +104,7 @@ void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_
 void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 
 void dessinertout(float timer);
+
+void initialiserbatiment(Maison maison);
 
 #endif //BAC_A_SABLE_1_D_JEU_H
