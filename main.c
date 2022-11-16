@@ -24,6 +24,7 @@ bool veutConstruireChateau = false;
 
 
 Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
+Maison maison1[100];
 souris souris1;
 
 

@@ -42,7 +42,7 @@ typedef struct {
     int prix;
 }Maison;
 
-Maison maison1[100];
+
 
 typedef struct {
     int numMaison;
