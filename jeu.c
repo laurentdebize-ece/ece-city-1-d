@@ -127,14 +127,6 @@ void chercherCaseDeLaSourie(int x, int y, int *caseX, int *caseY, bool *dansPlat
     }
 
 }
-
-void construireRoute(souris souris1, int construire_routes, int monde, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
-    if (souris1.interieurPlateau && construire_routes == true && monde == 0) {
-        plateau[souris1.caseY][souris1.caseX].etat = 1;
-    }
-}
-
-
 void initialiserPlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
         for (int j = 0; j < NB_CASE_LARGEUR; j++) {

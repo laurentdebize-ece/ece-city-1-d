@@ -69,9 +69,6 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
 
 void mainJeu();
 
-
-void construireRoute(souris souris1, int construire_routes, int monde, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
-
 ////////////////////////////// Timer ///////////////////////////////////////////////
 void resetTimer(float *timer);
 
