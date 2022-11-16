@@ -161,10 +161,15 @@ void dessinerSourieCurseur(souris souris1) {
 }
 
 void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
+    Image terrain_vague;
+    terrain_vague = LoadImage("../batiments/Terrain_vague.png");
+    ImageResize(&terrain_vague,20,20);
+    Texture2D  texture6 = LoadTextureFromImage(terrain_vague);
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++) {
             if (plateau[i][j].etat == 0) {
-                DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, WHITE);
+                DrawTexture(texture6,plateau[i][j].x,plateau[i][j].y,WHITE);
+                DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, BLACK);
             }
         }
     }
@@ -231,8 +236,9 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes){
 }
 
 
-void dessinertout(float timer) {
+void dessinertout(float timer, souris souris1) {
     DrawText(TextFormat("timer: %.0f", timer), 840, 0, 20, WHITE);
+    dessinerSourieCurseur(souris1);
 }
 
 void initialiserbatiment(Maison batiment){

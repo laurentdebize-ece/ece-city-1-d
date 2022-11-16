@@ -108,7 +108,7 @@ void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_
 
 void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 
-void dessinertout(float timer);
+void dessinertout(float timer,souris souris1);
 
 void initialiserbatiment(Maison maison);
 void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie);

@@ -40,26 +40,67 @@ int capa_eau = 1000000;
 
 
 void mainJeu() {
+    Rectangle rec_yellow = {1000, 100, 180, 60};
+    Rectangle rec_blue = {1000, 170, 180, 60};
+    Rectangle rec_monnaie = {1660, 15, 240, 30};
+    Rectangle rec_habitant = {1700, 55, 200, 30};
+    Rectangle rec_capa_elec = {1550, 95, 350, 30};
+    Rectangle rec_capa_eau = {1620, 135, 280, 30};
+    Rectangle rec_construire_cabane = {20, 915, 200, 55};
+    Rectangle rec_construire_centrale = {230, 915, 285, 55};
+    Rectangle rec_construire_chateau_d_eau = {525, 915, 110, 55};
+    Rectangle rec_construire_route = {645, 915, 200, 55};
+    Rectangle rec_routes_reset = {1000, 370, 180, 60};
+    Rectangle aire_de_jeu = {20,20,45*20,35*20};
+
+    Image ruine;
+    Image terrain_vague;
+    Image cabane;
+    Image maison;
+    Image immeuble;
+    Image gratte_ciel;
+    Image centrale;
+    Image chateau_d_eau;
+
+    ruine = LoadImage("../batiments/Ruine.png");
+    terrain_vague = LoadImage("../batiments/Terrain_vague.png");
+    cabane = LoadImage("../batiments/Cabane.png");
+    maison = LoadImage("../batiments/Maison.png");
+    immeuble = LoadImage("../batiments/Immeuble.png");
+    gratte_ciel = LoadImage("../batiments/Gratte_ciel.png");
+    centrale = LoadImage("../batiments/Centrale_electrique_2.png");
+    chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
+
+    Texture2D texture3 = LoadTextureFromImage(cabane);
+    Texture2D texture4 = LoadTextureFromImage(centrale);
+    Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
+    Texture2D texture6 = LoadTextureFromImage(ruine);
+    Texture2D texture7 = LoadTextureFromImage(terrain_vague);
+    Texture2D texture8 = LoadTextureFromImage(maison);
+    Texture2D texture9 = LoadTextureFromImage(immeuble);
+    Texture2D texture10 = LoadTextureFromImage(gratte_ciel);
+
+    UnloadImage(cabane);
+    UnloadImage(centrale);
+    UnloadImage(chateau_d_eau);
+    UnloadImage(terrain_vague);
+    UnloadImage(ruine);
+    UnloadImage(maison);
+    UnloadImage(immeuble);
+    UnloadImage(gratte_ciel);
+
 
     initialiserPlateau(plateau);
     //liresauv("../sauvgarde.txt", plateau);
+
 
     while (!WindowShouldClose()) {
 
 
         Vector2 mouse_pos = GetMousePosition();
 
-        Rectangle rec_yellow = {1000, 100, 180, 60};
-        Rectangle rec_blue = {1000, 170, 180, 60};
-        Rectangle rec_monnaie = {1660, 15, 240, 30};
-        Rectangle rec_habitant = {1700, 55, 200, 30};
-        Rectangle rec_capa_elec = {1550, 95, 350, 30};
-        Rectangle rec_capa_eau = {1620, 135, 280, 30};
-        Rectangle rec_construire_cabane = {20, 915, 200, 55};
-        Rectangle rec_construire_centrale = {230, 915, 285, 55};
-        Rectangle rec_construire_chateau_d_eau = {525, 915, 110, 55};
-        Rectangle rec_construire_route = {645, 915, 200, 55};
-        Rectangle rec_routes_reset = {1000, 370, 180, 60};
+
+
 
         BeginDrawing();
         ClearBackground(BLACK);
@@ -95,19 +136,18 @@ void mainJeu() {
                     }
                 }
                 if(plateau[i][j].etat == 2){
-                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
+                    //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
                 }
                 if(plateau[i][j].batiment == 1){
-                    //afficher l'image
+                    DrawTexture(texture3,j * 20 + 20 ,i * 20 + 20,WHITE);
                 }
-                if(plateau[i][j].etat == 7){
-                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, YELLOW);
+                if(plateau[i][j].batiment == 7){
+                    DrawTexture(texture4,j * 20 + 20 ,i * 20 + 20,WHITE);
                 }
-                if(plateau[i][j].etat == 8){
-                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, BLUE);
+                if(plateau[i][j].batiment == 8){
+                    DrawTexture(texture5,j * 20 + 20 ,i * 20 + 20,WHITE);
                 }
             }
-
         }
 
 
@@ -140,23 +180,21 @@ void mainJeu() {
 
         if (CheckCollisionPointRec(mouse_pos, rec_construire_cabane)) {
             //DrawRectangle(0,0,50,50,RED);
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 if(veutConstruireCabane)
                     veutConstruireCabane = false;
                 else
                     veutConstruireCabane = true;
-
                 veutConstruireChateau = false;
                 veutConstruireCentral = false;
             }
-
         }
-        if (veutConstruireCabane){
+        if (veutConstruireCabane && souris1.interieurPlateau && (souris1.caseX + 2 < NB_CASE_LARGEUR && souris1.caseY + 2 < NB_CASE_HAUTEUR )){
             verificationConstructionMaison = 0;
-            DrawRectangle(0,0,50,50,RED);
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
-                for (int i = 0; i < 3; ++i) {
-                    for (int j = 0; j < 3; ++j) {
+            DrawTexture(texture3,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+                for (int i = -1; i < 4; ++i) {
+                    for (int j = -1; j < 4; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
                             verificationConstructionMaison++;
                         }
@@ -175,7 +213,7 @@ void mainJeu() {
 
         if (CheckCollisionPointRec(mouse_pos, rec_construire_centrale)) {
             //DrawRectangle(0,0,50,50,RED);
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 if(veutConstruireCentral)
                     veutConstruireCentral = false;
                 else
@@ -187,12 +225,12 @@ void mainJeu() {
             }
 
         }
-        if (veutConstruireCentral){
+        if (veutConstruireCentral && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionCentral = 0;
-            DrawRectangle(50,0,50,50,YELLOW);
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
-                for (int i = 0; i < 6; ++i) {
-                    for (int j = 0; j < 4; ++j) {
+            DrawTexture(texture4,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+                for (int i = -1; i < 5; ++i) {
+                    for (int j = -1; j < 7; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+6>NB_CASE_LARGEUR || souris1.caseY+4>NB_CASE_HAUTEUR)){
                             verificationConstructionCentral++;
                         }
@@ -200,8 +238,8 @@ void mainJeu() {
                 }
                 if(verificationConstructionCentral==0){
                     plateau[souris1.caseY][souris1.caseX].batiment = 7;
-                    for (int i = 0; i < 6; ++i) {
-                        for (int j = 0; j < 4; ++j) {
+                    for (int i = 0; i < 4; ++i) {
+                        for (int j = 0; j < 6; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 7;
                         }
                     }
@@ -211,7 +249,7 @@ void mainJeu() {
 
         if (CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau)) {
             //DrawRectangle(0,0,50,50,RED);
-            if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
                 if(veutConstruireChateau)
                     veutConstruireChateau = false;
                 else
@@ -222,12 +260,12 @@ void mainJeu() {
             }
 
         }
-        if (veutConstruireChateau){
+        if (veutConstruireChateau && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionChateau = 0;
-            DrawRectangle(100,0,50,50,BLUE);
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau) {
-                for (int i = 0; i < 4; ++i) {
-                    for (int j = 0; j < 6; ++j) {
+            DrawTexture(texture5,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau) {
+                for (int i = -1; i < 5; ++i) {
+                    for (int j = -1; j < 7; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+4>NB_CASE_LARGEUR || souris1.caseY+6>NB_CASE_HAUTEUR)){
                             verificationConstructionChateau++;
                         }
@@ -271,7 +309,7 @@ void mainJeu() {
 
         afficherEtatMonde(monde, afficher_message_reset_routes);
 
-        dessinertout(timer);
+        dessinertout(timer, souris1);
         EndDrawing();
         }
     sauvegarde("../sauvgarde.txt", plateau);
