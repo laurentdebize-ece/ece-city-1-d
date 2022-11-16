@@ -39,8 +39,10 @@ typedef struct {
     bool vivable;
     int eau, electricite;
     int evolution;
+    int prix;
 }Maison;
 
+Maison maison1[100];
 
 typedef struct {
     int numMaison;
@@ -56,6 +58,8 @@ typedef struct {
     int nbMaisonAlim;
     MaisonAlim tabMaisonAlim[20];
 }Central;
+
+
 
 
 
@@ -106,5 +110,5 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 void dessinertout(float timer);
 
 void initialiserbatiment(Maison maison);
-
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie);
 #endif //BAC_A_SABLE_1_D_JEU_H

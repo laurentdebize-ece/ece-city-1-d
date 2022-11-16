@@ -273,16 +273,6 @@ void initialiserbatiment(Maison batiment){
     UnloadImage(immeuble);
     UnloadImage(gratte_ciel);
 
-    if(batiment.evolution == 0) {
-            batiment.nbHabitants = 0;}
-    if(batiment.evolution == 1) {
-        batiment.nbHabitants = 10;}
-    if(batiment.evolution == 2) {
-        batiment.nbHabitants = 50;}
-    if(batiment.evolution == 3) {
-        batiment.nbHabitants = 100;}
-    if(batiment.evolution == 4) {
-        batiment.nbHabitants = 1000;}
 
 }
 //Centrale : 100 000 ECE-flouz
@@ -290,3 +280,31 @@ void initialiserbatiment(Maison batiment){
 //- Route : 10 ECE-flouz par unité de grille
 //- Terrain vague : 1000 ECE-flouz
 //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
+
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
+
+    for(int i = 0; i < nbMaisons; i ++) {
+        if (maison1[i].tempsDuPlacement < 15) {
+            maison1[i].evolution = 0;
+            maison1[i].nbHabitants = 0;
+        }
+        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 30){
+            maison1[i].evolution = 1;
+            maison1[i].nbHabitants = 10;
+        }
+        if (maison1[i].tempsDuPlacement >= 30 || maison1[i]. tempsDuPlacement < 45){
+            maison1[i].evolution = 2;
+            maison1[i].nbHabitants = 50;
+        }
+        if (maison1[i].tempsDuPlacement >= 45 || maison1[i].tempsDuPlacement < 60){
+            maison1[i].evolution = 3;
+            maison1[i].nbHabitants = 100;
+        }
+        if(maison1[i].tempsDuPlacement >= 60 || maison1[i].tempsDuPlacement < 75)
+            maison1[i].evolution = 4;
+        maison1[i].nbHabitants = 1000;
+
+
+    }
+
+}
