@@ -18,6 +18,7 @@ typedef struct {
     int etat;
     int etatInterdit;
     int batiment;
+    int verification;
 } Case;
 
 typedef struct {

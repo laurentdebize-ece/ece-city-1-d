@@ -143,6 +143,7 @@ void initialiserPlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
                 plateau[i][j].x = plateau[i - 1][j].x;
                 plateau[i][j].y = plateau[i - 1][j].y + LARGEUR_CASE;
             }
+            plateau[i][j].verification=0;
         }
     }
 }

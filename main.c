@@ -22,6 +22,8 @@ float timer = 5;
 int monde_eau;
 int monde_elec;
 int nbMaisons;
+int nbCentrales;
+int nbChateaux;
 int verificationConstructionMaison = 0;
 bool veutConstruireCabane = false;
 int verificationConstructionCentral = 0;
@@ -32,6 +34,7 @@ int verificationConstructionRoutes = 0;
 
 
 Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
+Central chateaux[20];
 Maison maison1[100];
 souris souris1;
 
@@ -39,15 +42,61 @@ souris souris1;
 
 int reset_routes;
 int afficher_message_reset_routes;
+int construire_routes;
 
 int monnaie = 500000000;
 int habitant = 1000000;
 int capa_elec = 1000000;
 int capa_eau = 1000000;
 
+void rechercheChateauxEau(Case** plateau, Central* tableauChateaux){
+    int nbChateauxTrouve = 0;
+    for (int i = 0; i < NB_CASE_HAUTEUR; ++i) {
+        for (int j = 0; j < NB_CASE_LARGEUR; ++j) {
+            if(plateau[i][j].batiment == 8){
+                tableauChateaux[nbChateauxTrouve].numCaseX = j;
+                tableauChateaux[nbChateauxTrouve].numCaseY = i;
+                tableauChateaux[nbChateauxTrouve].capaciteMax;
+            }
+        }
+    }
+}
+
+void analyseChateauxEau(Case** plateau, Central chateaux, int x, int y){
+    for (int i = -1; i < 1; ++i) {
+        for (int j = -1; j < 1; ++j) {
+            if(plateau[y+i][x+j].verification==0){
+                if(plateau[y+i][x+j].etat>=2 && plateau[y+i][x+j].etat<=6){
+                    // on a trouvé une maison
+                    plateau[y+i][x+j].verification=1;
+                }
+                if(plateau[y+i][x+j].etat==1){
+                    plateau[y+i][x+j].verification=1;
+                    analyseChateauxEau(plateau, chateaux, x+j, y+i);
+                }
+            }
+        }
+    }
+}
+
+void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20],int x, int y){
+    int nbChateauxEtudie = 0;
+    for (int i = x-1; i < x+5; ++i) {
+        for (int j = y-1; j < y+7; ++j) {
+            if(plateau[j][i].etat==1){
+                DrawRectangle(0,0,30,30,BLUE);
+                //analyseChateauxEau(plateau, chateaux[nbChateauxEtudie], i-l, j-k);
+                nbChateauxEtudie++;
+            }
+        }
+    }
+}
+
+
+
 
 void mainJeu() {
-    SetTargetFPS(1000);
+    SetTargetFPS(60);
     Rectangle rec_yellow = {1000, 100, 180, 60};
     Rectangle rec_blue = {1000, 170, 180, 60};
     Rectangle rec_monnaie = {1660, 15, 240, 30};
@@ -145,13 +194,13 @@ void mainJeu() {
                 if(plateau[i][j].etat == 2){
                     //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
                 }
-                if(plateau[i][j].batiment == 1){
+                if((plateau[i][j].batiment == 1 && monde==0)){
                     DrawTexture(texture3,j * 20 + 20 ,i * 20 + 20,WHITE);
                 }
-                else if(plateau[i][j].batiment == 7){
+                if(plateau[i][j].batiment == 7 && (monde==0 || monde==1)){
                     DrawTexture(texture4,j * 20 + 20 ,i * 20 + 20,WHITE);
                 }
-                else if(plateau[i][j].batiment == 8){
+                if(plateau[i][j].batiment == 8 && (monde==0 || monde==2)){
                     DrawTexture(texture5,j * 20 + 20 ,i * 20 + 20,WHITE);
                 }
                 else{
@@ -172,7 +221,7 @@ void mainJeu() {
                 monde = 2;
             }
         }
-        if (IsKeyPressed(KEY_ENTER)) {   // peut etre le deplacé en dehors parceque faut appuyer sur la souris pour que ça marche
+        if (IsKeyPressed(KEY_ENTER)) {
             monde = 0;
         }
         if (IsKeyDown(KEY_BACKSPACE)) {
@@ -222,6 +271,7 @@ void mainJeu() {
                     for (int i = 0; i < 3; ++i) {
                         for (int j = 0; j < 3; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 2;
+                            nbMaisons++;
                         }
                     }
                 }
@@ -243,6 +293,7 @@ void mainJeu() {
                     for (int i = 0; i < 4; ++i) {
                         for (int j = 0; j < 6; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 7;
+                            nbCentrales++;
                         }
                     }
                 }
@@ -264,6 +315,7 @@ void mainJeu() {
                     for (int i = 0; i < 4; ++i) {
                         for (int j = 0; j < 6; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 8;
+                            nbChateaux++;
                         }
                     }
                 }
@@ -305,6 +357,7 @@ void mainJeu() {
 
 
         afficherEtatMonde(monde, afficher_message_reset_routes);
+        rechercheRouteConnecteChateaux(plateau, chateaux, 5, 5);
 
         dessinertout(timer, souris1);
         EndDrawing();
