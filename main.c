@@ -257,10 +257,11 @@ void mainJeu() {
         }
         if (IsKeyPressed(KEY_ENTER)) {
             monde = 0;
-            maison1[0].evolution++;
+            maison1[0].evolution++; // ligne test
         }
         if (IsKeyDown(KEY_BACKSPACE)) {
             reset_routes = true;
+            maison1[0].evolution--; // ligne test
         } else {
             if (reset_routes == true) {
                 reset_routes = false;
