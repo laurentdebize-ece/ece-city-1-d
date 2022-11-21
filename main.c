@@ -178,6 +178,32 @@ void mainJeu() {
 
         dessinerBasePlateau(plateau);
 
+        for (int i = 0; i < 100; ++i) {
+            switch (maison1[i].evolution) {
+                case 0 : {
+                    maison1[i].fileName = "../batiments/Terrain_vague.png";
+                    break;
+                }
+                case 1 : {
+                    maison1[i].fileName = "../batiments/Cabane.png";
+                    break;
+                }
+                case 2 : {
+                    maison1[i].fileName = "../batiments/Maison.png";
+                    break;
+                }
+                case 3 : {
+                    maison1[i].fileName = "../batiments/Immeuble.png";
+                    break;
+                }
+                case 4 : {
+                    maison1[i].fileName = "../batiments/Gratte_ciel.png";
+                    break;
+                }
+
+            }
+        }
+
         for (int i = 0; i < 35; i++) {
             for (int j = 0; j < 45; j++) {
 
@@ -231,6 +257,7 @@ void mainJeu() {
         }
         if (IsKeyPressed(KEY_ENTER)) {
             monde = 0;
+            maison1[0].evolution++;
         }
         if (IsKeyDown(KEY_BACKSPACE)) {
             reset_routes = true;
