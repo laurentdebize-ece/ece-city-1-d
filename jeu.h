@@ -12,6 +12,7 @@
 #define LARGEUR_CASE 20
 
 
+
 typedef struct {
     int x, y;
     int largeur;
@@ -71,7 +72,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
 void mainJeu();
 
 ////////////////////////////// Timer ///////////////////////////////////////////////
-void resetTimer(float *timer);
+void resetTimer(float *timer, int*monnaie, int habitant, int impots);
 
 ////////////////////////////// Initialisation /////////////////////////////////////////
 void initialiserPlateau(Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);

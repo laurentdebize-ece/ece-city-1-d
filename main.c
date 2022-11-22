@@ -1,5 +1,12 @@
 #include "jeu.h"
+int reset_routes;
+int afficher_message_reset_routes;
 
+int monnaie = 500000;
+int habitant = 0;
+int capa_elec = 0;
+int capa_eau = 0;
+int impots = 10;
 enum{
     rien = 0,
     elec = 1,
@@ -45,10 +52,6 @@ int reset_routes;
 int afficher_message_reset_routes;
 int construire_routes;
 
-int monnaie = 500000000;
-int habitant = 1000000;
-int capa_elec = 1000000;
-int capa_eau = 1000000;
 
 void rechercheChateauxEau(Case** plateau, Central* tableauChateaux){
     int nbChateauxTrouve = 0;
@@ -104,12 +107,12 @@ void mainJeu() {
     Rectangle rec_habitant = {1700, 55, 200, 30};
     Rectangle rec_capa_elec = {1550, 95, 350, 30};
     Rectangle rec_capa_eau = {1620, 135, 280, 30};
-    Rectangle rec_construire_cabane = {20,915,200,55};
-    Rectangle rec_construire_centrale = {230,915,285,55};
-    Rectangle rec_construire_chateau_d_eau = {525,915,110,55};
-    Rectangle rec_construire_route = {645,915,200,55};
+    Rectangle rec_construire_cabane = {20, 915, 200, 55};
+    Rectangle rec_construire_centrale = {230, 915, 285, 55};
+    Rectangle rec_construire_chateau_d_eau = {525, 915, 110, 55};
+    Rectangle rec_construire_route = {645, 915, 200, 55};
     Rectangle rec_routes_reset = {1000, 370, 180, 60};
-    Rectangle aire_de_jeu = {20,20,45*20,35*20};
+    Rectangle aire_de_jeu = {20, 20, 45 * 20, 35 * 20};
 
     Image ruine;
     Image terrain_vague;
@@ -119,6 +122,7 @@ void mainJeu() {
     Image gratte_ciel;
     Image centrale;
     Image chateau_d_eau;
+    Image fond_map;
 
     ruine = LoadImage("../batiments/Ruine.png");
     terrain_vague = LoadImage("../batiments/Terrain_Vague1.png");
@@ -128,15 +132,19 @@ void mainJeu() {
     gratte_ciel = LoadImage("../batiments/Gratte_ciel.png");
     centrale = LoadImage("../batiments/Centrale_electrique_2.png");
     chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
+    fond_map = LoadImage("../batiments/fond_map.png");
 
     Texture2D texture3 = LoadTextureFromImage(cabane);
     Texture2D texture4 = LoadTextureFromImage(centrale);
     Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
-    Texture2D texture6 = LoadTextureFromImage(ruine);
-    Texture2D texture7 = LoadTextureFromImage(terrain_vague);
-    Texture2D texture8 = LoadTextureFromImage(maison);
-    Texture2D texture9 = LoadTextureFromImage(immeuble);
-    Texture2D texture10 = LoadTextureFromImage(gratte_ciel);
+    Texture2D texture6 = LoadTextureFromImage(terrain_vague);
+    Texture2D texture7 = LoadTextureFromImage(fond_map);
+    Texture2D texture8 = LoadTextureFromImage(ruine);
+    Texture2D texture9 = LoadTextureFromImage(maison);
+    Texture2D texture10 = LoadTextureFromImage(immeuble);
+    Texture2D texture11 = LoadTextureFromImage(gratte_ciel);
+    //ImageResize(&terrain_vague, 60, 60);
+
 
     UnloadImage(cabane);
     UnloadImage(centrale);
@@ -172,9 +180,10 @@ void mainJeu() {
         chercherCaseDeLaSourie(GetMouseX(), GetMouseY(), &souris1.caseX, &souris1.caseY, &souris1.interieurPlateau);
         dessinerSourieCurseur(souris1);
 
-        resetTimer(&timer);
+        resetTimer(&timer, &monnaie, habitant, impots);
 
         timer -= GetFrameTime();
+        //evolutionbatiment(&maison1[100], nbMaisons, monnaie);
 
         dessinerBasePlateau(plateau);
 
@@ -208,10 +217,14 @@ void mainJeu() {
             for (int j = 0; j < 45; j++) {
 
                 if (plateau[i][j].etat == 1) {
-                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20,monde == 2 ? BLUE : monde == 1 ? YELLOW : GRAY);
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20,
+                                  monde == 2 ? BLUE : monde == 1 ? YELLOW : GRAY);
                     DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, BLACK); // creation des routes
-                    if (reset_routes == true && monde == 0 && plateau[souris1.caseY][souris1.caseX].etat != 2 && plateau[souris1.caseY][souris1.caseX].etat != 7 && plateau[souris1.caseY][souris1.caseX].etat != 8) {
-                        DrawText(TextFormat("Cliquer sur la route que \n vous souhaitez retirer"), 1000, 267, 20,WHITE);
+                    if (reset_routes == true && monde == 0 && plateau[souris1.caseY][souris1.caseX].etat != 2 &&
+                        plateau[souris1.caseY][souris1.caseX].etat != 7 &&
+                        plateau[souris1.caseY][souris1.caseX].etat != 8) {
+                        DrawText(TextFormat("Cliquer sur la route que \n vous souhaitez retirer"), 1000, 267, 20,
+                                 WHITE);
                         DrawRectangle(souris1.caseX * 20 + 20, souris1.caseY * 20 + 20, 20, 20, RED);
                         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
                             if (veut_construire == 4) {
@@ -219,35 +232,34 @@ void mainJeu() {
                             }
                             plateau[souris1.caseY][souris1.caseX].etat = 0;
                         }
-                    }
-                    else if (reset_routes == false) {
+                    } else if (reset_routes == false) {
                         plateau[i][j].etat = 1;
                     }
                 }
-                if(plateau[i][j].etat == 2){
+                if (plateau[i][j].etat == 2) {
                     //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
                 }
-                if((plateau[i][j].batiment >= 100 && monde==0)){
+                if ((plateau[i][j].batiment >= 100 && monde == 0)) {
                     //DrawTexture(texture3,j * 20 + 20 ,i * 20 + 20,WHITE);
-                    DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),j * 20 + 20 ,i * 20 + 20,WHITE);
+                    DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),
+                                j * 20 + 20, i * 20 + 20, WHITE);
                 }
-                if(plateau[i][j].batiment == 7 && (monde==0 || monde==1)){
-                    DrawTexture(texture4,j * 20 + 20 ,i * 20 + 20,WHITE);
-                }
-                if(plateau[i][j].batiment == 8 && (monde==0 || monde==2)){
-                    DrawTexture(texture5,j * 20 + 20 ,i * 20 + 20,WHITE);
-                }
-                else{
+                    if (plateau[i][j].batiment == 7 && (monde == 0 || monde == 1)) {
+                        DrawTexture(texture4, j * 20 + 20, i * 20 + 20, WHITE);
+                    }
+                    if (plateau[i][j].batiment == 8 && (monde == 0 || monde == 2)) {
+                        DrawTexture(texture5, j * 20 + 20, i * 20 + 20, WHITE);
+                    } else {
 
+                    }
                 }
             }
-        }
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 
 
-            if (CheckCollisionPointRec(mouse_pos, rec_routes_reset)) {
-                afficher_message_reset_routes = !afficher_message_reset_routes;
-            }
+                if (CheckCollisionPointRec(mouse_pos, rec_routes_reset)) {
+                    afficher_message_reset_routes = !afficher_message_reset_routes;
+                }
 
             if (CheckCollisionPointRec(mouse_pos, rec_yellow)) {
                 monde = 1;
@@ -293,8 +305,8 @@ void mainJeu() {
         }
         if (veut_construire == 1 && souris1.interieurPlateau && (souris1.caseX + 2 < NB_CASE_LARGEUR && souris1.caseY + 2 < NB_CASE_HAUTEUR )){
             verificationConstructionMaison = 0;
-            DrawTexture(texture3,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+            DrawTexture(texture6,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau && monnaie >= 1000) {
                 for (int i = -1; i < 4; ++i) {
                     for (int j = -1; j < 4; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0 && plateau[souris1.caseY+j][souris1.caseX+i].etat != 1) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
@@ -312,13 +324,14 @@ void mainJeu() {
                         }
                     }
                     nbMaisons++;
+                    monnaie -= 1000;
                 }
             }
         }
         else if (veut_construire == 2 && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionCentral = 0;
             DrawTexture(texture4,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau && monnaie >= 100000) {
                 for (int i = -1; i < 5; ++i) {
                     for (int j = -1; j < 7; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0 && plateau[souris1.caseY+j][souris1.caseX+i].etat != 1) || (souris1.caseX+6>NB_CASE_LARGEUR || souris1.caseY+4>NB_CASE_HAUTEUR)){
@@ -333,6 +346,8 @@ void mainJeu() {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 7;
                         }
                     }
+                    capa_elec += 5000;
+                    monnaie -= 100000;
                     nbCentrales++;
                 }
             }
@@ -340,7 +355,7 @@ void mainJeu() {
         else if (veut_construire == 3 && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionChateau = 0;
             DrawTexture(texture5,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau && monnaie >= 100000) {
                 for (int i = -1; i < 5; ++i) {
                     for (int j = -1; j < 7; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0 && plateau[souris1.caseY+j][souris1.caseX+i].etat != 1) || (souris1.caseX+4>NB_CASE_LARGEUR || souris1.caseY+6>NB_CASE_HAUTEUR)){
@@ -355,6 +370,8 @@ void mainJeu() {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 8;
                         }
                     }
+                    monnaie -= 100000;
+                    capa_eau += 5000;
                     nbChateaux++;
                 }
             }
@@ -373,39 +390,39 @@ void mainJeu() {
         }
         else{
 
+            }
+            DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
+            DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
+
+            if (timer <= 1) {
+                DrawText(TextFormat("Nouveau Cycle"), 180, 280, 80, GREEN);
+            }
+
+            dessinerCasesEtages(rec_yellow, rec_blue, mouse_pos);
+
+            dessinerVariables(rec_monnaie, rec_habitant, rec_capa_elec, rec_capa_eau, mouse_pos, monnaie, habitant,
+                              capa_elec, capa_eau);
+
+
+            dessinerCasesChoixConstruction(mouse_pos, rec_construire_cabane, rec_routes_reset,
+                                           rec_construire_centrale, rec_construire_chateau_d_eau,
+                                           rec_construire_route);
+
+
+            afficherEtatMonde(monde, afficher_message_reset_routes);
+            rechercheRouteConnecteChateaux(plateau, chateaux, 5, 5);
+
+            dessinertout(timer, souris1);
+            EndDrawing();
         }
-        DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
-        DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
-
-        if (timer <= 1) {
-            DrawText(TextFormat("Nouveau Cycle"), 180, 280, 80, GREEN);
-        }
-
-        dessinerCasesEtages(rec_yellow, rec_blue, mouse_pos);
-
-        dessinerVariables(rec_monnaie, rec_habitant, rec_capa_elec, rec_capa_eau, mouse_pos, monnaie, habitant,
-                          capa_elec, capa_eau);
-
-
-        dessinerCasesChoixConstruction( mouse_pos,  rec_construire_cabane,  rec_routes_reset,
-                                        rec_construire_centrale,  rec_construire_chateau_d_eau,
-                                        rec_construire_route);
+        sauvegarde("../sauvgarde.txt", plateau);
+    }
 
 
 
+    int main() {
+        mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
 
-        afficherEtatMonde(monde, afficher_message_reset_routes);
-        rechercheRouteConnecteChateaux(plateau, chateaux, 5, 5);
+        return 0;
+    }
 
-        dessinertout(timer, souris1);
-        EndDrawing();
-        }
-    sauvegarde("../sauvgarde.txt", plateau);
-}
-
-
-int main() {
-    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
-
-    return 0;
-}

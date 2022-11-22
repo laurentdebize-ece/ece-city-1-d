@@ -96,9 +96,10 @@ void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     fclose(ifs);
 }
 
-void resetTimer(float *timer) {
+void resetTimer(float *timer, int* monnaie, int habitant, int impots) {
     if (*timer <= 0) {
         *timer = 15;
+        *monnaie += habitant * (impots);
     }
 }
 
@@ -300,7 +301,7 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
         }
         if(maison1[i].tempsDuPlacement >= 60 || maison1[i].tempsDuPlacement < 75)
             maison1[i].evolution = 4;
-            maison1[i].nbHabitants = 1000;
+        maison1[i].nbHabitants = 1000;
     }
     for(int i = 0; i < maison1[i].nbHabitants; i++){
         monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
