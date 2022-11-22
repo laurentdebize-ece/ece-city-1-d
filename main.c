@@ -121,7 +121,7 @@ void mainJeu() {
     Image chateau_d_eau;
 
     ruine = LoadImage("../batiments/Ruine.png");
-    terrain_vague = LoadImage("../batiments/Terrain_vague.png");
+    terrain_vague = LoadImage("../batiments/Terrain_Vague1.png");
     cabane = LoadImage("../batiments/Cabane.png");
     maison = LoadImage("../batiments/Maison.png");
     immeuble = LoadImage("../batiments/Immeuble.png");
@@ -151,7 +151,7 @@ void mainJeu() {
     initialiserPlateau(plateau);
 
     for (int i = 0; i < 100; ++i) {
-        maison1[i].fileName = "../batiments/Terrain_vague.png";
+        maison1[i].fileName = "../batiments/Terrain_Vague1.png";
         maison1[i].nbHabitants = -1;
         maison1[i].evolution = -1;
     }
@@ -181,7 +181,7 @@ void mainJeu() {
         for (int i = 0; i < 100; ++i) {
             switch (maison1[i].evolution) {
                 case 0 : {
-                    maison1[i].fileName = "../batiments/Terrain_vague.png";
+                    maison1[i].fileName = "../batiments/Terrain_Vague1.png";
                     break;
                 }
                 case 1 : {
@@ -304,15 +304,14 @@ void mainJeu() {
                 }
                 if(verificationConstructionMaison == 0){
                     plateau[souris1.caseY][souris1.caseX].batiment = 100 + nbMaisons;
-                    nbMaisons++;
                     for (int i = 0; i < 3; ++i) {
                         for (int j = 0; j < 3; ++j) {
                             maison1[nbMaisons].nbHabitants = 0;
                             maison1[nbMaisons].evolution = 0;
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 2;
-
                         }
                     }
+                    nbMaisons++;
                 }
             }
         }
@@ -329,13 +328,12 @@ void mainJeu() {
                 }
                 if(verificationConstructionCentral==0){
                     plateau[souris1.caseY][souris1.caseX].batiment = 7;
-                    nbCentrales++;
                     for (int i = 0; i < 4; ++i) {
                         for (int j = 0; j < 6; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 7;
-
                         }
                     }
+                    nbCentrales++;
                 }
             }
         }
@@ -352,12 +350,12 @@ void mainJeu() {
                 }
                 if(verificationConstructionChateau == 0){
                     plateau[souris1.caseY][souris1.caseX].batiment = 8;
-                    nbChateaux++;
                     for (int i = 0; i < 4; ++i) {
                         for (int j = 0; j < 6; ++j) {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 8;
                         }
                     }
+                    nbChateaux++;
                 }
             }
         }

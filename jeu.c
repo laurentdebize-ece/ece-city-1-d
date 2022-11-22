@@ -155,7 +155,7 @@ void dessinerSourieCurseur(souris souris1) {
 
 void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     Image terrain_vague;
-    terrain_vague = LoadImage("../batiments/Terrain_vague.png");
+    terrain_vague = LoadImage("../batiments/fond_map.png");
     ImageResize(&terrain_vague,20,20);
     Texture2D  texture6 = LoadTextureFromImage(terrain_vague);
     for (int i = 0; i < 35; i++) {
@@ -246,7 +246,7 @@ void initialiserbatiment(Maison batiment){
     Image chateau_d_eau;
 
     ruine = LoadImage("../batiments/Ruine.png");
-    terrain_vague = LoadImage("../batiments/Terrain_vague.png");
+    terrain_vague = LoadImage("../batiments/Terrain_Vague1.png");
     cabane = LoadImage("../batiments/Cabane.png");
     maison = LoadImage("../batiments/Maison.png");
     immeuble = LoadImage("../batiments/Immeuble.png");
