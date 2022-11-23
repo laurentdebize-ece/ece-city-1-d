@@ -100,7 +100,6 @@ int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, in
                 plateau[i][j].etat = 1;
         }
     }
-
     if(connecteElec && connecteEau)
         return 1;
     else
@@ -422,8 +421,8 @@ void mainJeu() {
         }
         if (veut_construire == 1 && souris1.interieurPlateau && (souris1.caseX + 2 < NB_CASE_LARGEUR && souris1.caseY + 2 < NB_CASE_HAUTEUR )){
             verificationConstructionMaison = 0;
-            DrawTexture(texture3,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+            DrawTexture(texture6,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau && monnaie >= 1000) {
                 for (int i = 0; i < 3; ++i) {
                     for (int j = 0; j < 3; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
@@ -446,13 +445,14 @@ void mainJeu() {
                     nbMaisons++;
                     //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);             // ici
                     monnaie -= 1000;
+                    habitant += 10;
                 }
             }
         }
         else if (veut_construire == 2 && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionCentral = 0;
             DrawTexture(texture4,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau && monnaie >= 100000) {
                 for (int i = 0; i < 4; ++i) {
                     for (int j = 0; j < 6; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+6>NB_CASE_LARGEUR || souris1.caseY+4>NB_CASE_HAUTEUR)){
@@ -476,7 +476,7 @@ void mainJeu() {
         else if (veut_construire == 3 && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionChateau = 0;
             DrawTexture(texture5,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau) {
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau && monnaie >= 100000) {
                 for (int i = 0; i < 4; ++i) {
                     for (int j = 0; j < 6; ++j) {
                         if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+4>NB_CASE_LARGEUR || souris1.caseY+6>NB_CASE_HAUTEUR)){
