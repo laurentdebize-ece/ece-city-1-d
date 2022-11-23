@@ -68,7 +68,7 @@ typedef struct {
 
 
 /////////////////////////////// Main ////////////////////////////////////////////
-int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste);
+int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2);
 
 void mainJeu();
 

@@ -24,6 +24,7 @@ int communiste;
 int capitaliste;
 int jouer;
 int quitter;
+int quitter2;
 int credits;
 float timer = 5;
 int monde_eau;
@@ -53,6 +54,71 @@ souris souris1;
 int reset_routes;
 int afficher_message_reset_routes;
 int construire_routes;
+
+void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec){
+    if(!(*connecteEau) || !(*connecteElec)){
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                // recherche de central
+                switch (plateau[y+i][x+j].etat) {
+                    case 1 : {
+                        plateau[y+i][x+j].etat = 22;
+                        rechercheCentral(plateau, x+j, y+i, connecteEau, connecteElec);
+                        break;
+                    }
+                    case 7 : {
+                        // on a trouvé une centrale
+                        *connecteElec = true;
+                        break;
+                    }
+                    case 8 : {
+                        *connecteEau = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y){
+    bool connecteEau = false;
+    bool connecteElec = false;
+    int compteur = 0;
+    for (int i = -1; i < 4; i++) {
+        for (int j = -1; j < 4; j++) {
+            if (compteur!=0 && compteur != 4 && compteur !=20 && compteur !=24){
+                if(plateau[i+y][j+x].etat==1){
+                    rechercheCentral(plateau, j+x, i+y, &connecteEau, &connecteElec);
+                }
+            }
+            compteur++;
+        }
+    }
+
+    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+        for (int j = 0; j < NB_CASE_LARGEUR; j++) {
+            if (plateau[i][j].etat == 22)
+                plateau[i][j].etat = 1;
+        }
+    }
+    if(connecteElec && connecteEau)
+        return 1;
+    else
+        return 0;
+
+}
+
+void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons){
+    for (int i = 0; i < nbMaisons; i++) {
+        if (maison1[i].vivable == 0){
+            maison1[i].vivable = verificationViable(plateau, maison1[i].numCaseX, maison1[i].numCaseY);
+            DrawRectangle(maison1[i].numCaseX * 20 + 20, maison1[i].numCaseY * 20 + 20, 20,20,GREEN);
+        }
+    }
+}
 
 void rechercheChateauxEau(Case** plateau, Central* tableauChateaux){
     int nbChateauxTrouve = 0;
@@ -210,6 +276,8 @@ void mainJeu() {
         //evolutionbatiment(&maison1[100], nbMaisons, monnaie);
 
         dessinerBasePlateau(plateau);
+
+
 
         for (int i = 0; i < 35; i++) {
             for (int j = 0; j < 45; j++) {
@@ -451,7 +519,7 @@ void mainJeu() {
     sauvegarde("../sauvgarde.txt", plateau);
 }
 int main() {
-    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
+    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste, &quitter2);
 
     return 0;
 }

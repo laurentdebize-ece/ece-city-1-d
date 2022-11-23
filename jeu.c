@@ -1,10 +1,11 @@
 #include "jeu.h"
 
 
-int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste) {
+int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2) {
 
     Image menu;
     Image mode;
+    Image credit;
     InitWindow(1024, 768, "ECE city");
     SetWindowPosition(50, 50);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
@@ -12,14 +13,19 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
     MaximizeWindow();
     menu = LoadImage("../menu/menu.png");
     mode = LoadImage("../menu/mode.png");
+    credit = LoadImage("../menu/credits.png");
     ImageDrawPixel(&menu, 0, 0, RAYWHITE);
     ImageResize(&menu, 1920, 1000);
     Texture2D texture = LoadTextureFromImage(menu);
     ImageDrawPixel(&mode, 0, 0, RAYWHITE);
     ImageResize(&mode, 1920, 1000);
     Texture2D texture2 = LoadTextureFromImage(mode);
+    ImageDrawPixel(&credit, 0, 0, RAYWHITE);
+    ImageResize(&credit, 1920, 1000);
+    Texture2D texture3 = LoadTextureFromImage(credit);
     UnloadImage(mode);
     UnloadImage(menu);
+    UnloadImage(credit);
     while (!WindowShouldClose()) {
         Vector2 mouse_pos = GetMousePosition();
         BeginDrawing();
@@ -36,7 +42,8 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
         }
         if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             *quitter = true;
-        } else if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+
+        } if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             *credits = true;
         }
 
@@ -56,14 +63,27 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
                 *capitaliste = true;
                 mainJeu();
             }
+        }
+        if (*credits == true){
+            DrawTexture(texture3, 0, 0, WHITE);
+            Rectangle rec_QUITTER2 ={60, 60, 60, 60};
+            DrawRectangleLinesEx(rec_QUITTER2, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : WHITE);
+            if (CheckCollisionPointRec(mouse_pos, rec_QUITTER2) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                *quitter2 = true;
 
+            }
+            if( *quitter2 == true){
+                DrawTexture(texture, 0, 0, WHITE);
+            }
         }
 
         EndDrawing();
 
     }
+
     UnloadTexture(texture);
     UnloadTexture(texture2);
+    UnloadTexture(texture3);
 
     CloseWindow();
     return 0;
