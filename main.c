@@ -83,14 +83,15 @@ void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int
 int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y){
     bool connecteEau = false;
     bool connecteElec = false;
-
+    int compteur = 0;
     for (int i = -1; i < 4; i++) {
         for (int j = -1; j < 4; j++) {
-            if (i!=j && i!=-j){
+            if (compteur!=0 && compteur != 4 && compteur !=20 && compteur !=24){
                 if(plateau[i+y][j+x].etat==1){
                     rechercheCentral(plateau, j+x, i+y, &connecteEau, &connecteElec);
                 }
             }
+            compteur++;
         }
     }
 
