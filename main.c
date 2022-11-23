@@ -52,6 +52,70 @@ int reset_routes;
 int afficher_message_reset_routes;
 int construire_routes;
 
+void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec){
+    if(!(*connecteEau) || !(*connecteElec)){
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                // recherche de central
+                switch (plateau[y+i][x+j].etat) {
+                    case 1 : {
+                        plateau[y+i][x+j].etat = 22;
+                        rechercheCentral(plateau, x+j, y+i, connecteEau, connecteElec);
+                        break;
+                    }
+                    case 7 : {
+                        // on a trouvé une centrale
+                        *connecteElec = true;
+                        break;
+                    }
+                    case 8 : {
+                        *connecteEau = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y){
+    bool connecteEau = false;
+    bool connecteElec = false;
+
+    for (int i = -1; i < 4; i++) {
+        for (int j = -1; j < 4; j++) {
+            if (i!=j && i!=-j){
+                if(plateau[i+y][j+x].etat==1){
+                    rechercheCentral(plateau, j+x, i+y, &connecteEau, &connecteElec);
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+        for (int j = 0; j < NB_CASE_LARGEUR; j++) {
+            if (plateau[i][j].etat == 22)
+                plateau[i][j].etat = 1;
+        }
+    }
+
+    if(connecteElec && connecteEau)
+        return 1;
+    else
+        return 0;
+
+}
+
+void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons){
+    for (int i = 0; i < nbMaisons; i++) {
+        if (maison1[i].vivable == 0){
+            maison1[i].vivable = verificationViable(plateau, maison1[i].numCaseX, maison1[i].numCaseY);
+            DrawRectangle(maison1[i].numCaseX * 20 + 20, maison1[i].numCaseY * 20 + 20, 20,20,GREEN);
+        }
+    }
+}
 
 void rechercheChateauxEau(Case** plateau, Central* tableauChateaux){
     int nbChateauxTrouve = 0;
@@ -66,31 +130,77 @@ void rechercheChateauxEau(Case** plateau, Central* tableauChateaux){
     }
 }
 
-void analyseChateauxEau(Case** plateau, Central chateaux, int x, int y){
-    for (int i = -1; i < 1; ++i) {
-        for (int j = -1; j < 1; ++j) {
-            if(plateau[y+i][x+j].verification==0){
-                if(plateau[y+i][x+j].etat>=2 && plateau[y+i][x+j].etat<=6){
-                    // on a trouvé une maison
-                    plateau[y+i][x+j].verification=1;
-                }
-                if(plateau[y+i][x+j].etat==1){
-                    plateau[y+i][x+j].verification=1;
-                    analyseChateauxEau(plateau, chateaux, x+j, y+i);
+
+void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux, int x, int y){
+/*
+    int i = 1;
+    if (plateau[caseY - 1][caseX].etat == i) {
+
+        if (i == 1) {
+            plateau[caseY - 1][caseX].etat = 22;
+            analyseChateauxEau(plateau, chateaux, caseX, caseY - 1);
+        }
+
+    }
+    if (plateau[caseY + 1][caseX].etat == i) {
+
+        if (i == 1) {
+            plateau[caseY + 1][caseX].etat = 22;
+            analyseChateauxEau(plateau, chateaux, caseX, caseY + 1);
+        }
+    }
+    if (plateau[caseY][caseX - 1].etat == i) {
+
+        if (i == 1) {
+            plateau[caseY][caseX - 1].etat = 22;
+            analyseChateauxEau(plateau, chateaux,caseX - 1, caseY);
+
+        }
+
+    }
+    if (plateau[caseY][caseX + 1].etat == i) {
+
+        if (i == 1) {
+            plateau[caseY][caseX + 1].etat = 22;
+            analyseChateauxEau(plateau, chateaux,caseX + 1, caseY);
+        }
+    }
+}*/
+
+
+
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (i!=j && i!=-j){
+                if(plateau[y+i][x+j].verification==0){
+                    if(plateau[y+i][x+j].etat>=100){
+                     // on a trouvé une maison
+                        plateau[y+i][x+j].verification=1;
+                    }
+                    if(plateau[y+i][x+j].etat==1){
+                        plateau[i+y][x+j].etat = 22;
+                        analyseChateauxEau(plateau, chateaux, x+j, y+i);
+                    }
                 }
             }
         }
     }
 }
 
-void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20],int x, int y){
-    int nbChateauxEtudie = 0;
-    for (int i = x-1; i < x+5; ++i) {
-        for (int j = y-1; j < y+7; ++j) {
-            if(plateau[j][i].etat==1){
-                DrawRectangle(0,0,30,30,BLUE);
-                //analyseChateauxEau(plateau, chateaux[nbChateauxEtudie], i-l, j-k);
-                nbChateauxEtudie++;
+void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20],int x, int y, int nbChateauEau){
+    int compteur;
+    for (int nb = 0; nb < nbChateauEau; nb++) {
+        x = chateaux[nb].numCaseX;
+        y = chateaux[nb].numCaseY;
+        compteur = 0;
+        for (int i = - 1; i < 5; i++) {
+            for (int j = -1; j < 7; j++) {
+                compteur++;
+                if (plateau[j+y][i+x].etat == 1 && (compteur != 1 && compteur!= 8 && compteur != 41 && compteur!= 48)){
+                    DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
+                    analyseChateauxEau(plateau, chateaux[nbChateauEau], x+i, y+j);
+                    //nbChateauEau++;
+                }
             }
         }
     }
@@ -234,15 +344,22 @@ void mainJeu() {
                         }
                     } else if (reset_routes == false) {
                         plateau[i][j].etat = 1;
+                        //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux); // ici
+                        verificationMaisonNonViables(plateau, maison1, nbMaisons);
                     }
                 }
-                if (plateau[i][j].etat == 2) {
-                    //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
+                if(plateau[i][j].etat == 22){
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, RED);
                 }
                 if ((plateau[i][j].batiment >= 100 && monde == 0)) {
                     //DrawTexture(texture3,j * 20 + 20 ,i * 20 + 20,WHITE);
                     DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),
                                 j * 20 + 20, i * 20 + 20, WHITE);
+                }
+                for (int k = 0; k < nbMaisons; k++) {
+                    if(maison1[k].vivable==0){
+                        DrawRectangle(maison1[k].numCaseX*20 + 20, maison1[k].numCaseY*20 + 20, 20,20, BLACK);
+                    }
                 }
                     if (plateau[i][j].batiment == 7 && (monde == 0 || monde == 1)) {
                         DrawTexture(texture4, j * 20 + 20, i * 20 + 20, WHITE);
@@ -305,11 +422,11 @@ void mainJeu() {
         }
         if (veut_construire == 1 && souris1.interieurPlateau && (souris1.caseX + 2 < NB_CASE_LARGEUR && souris1.caseY + 2 < NB_CASE_HAUTEUR )){
             verificationConstructionMaison = 0;
-            DrawTexture(texture6,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau && monnaie >= 1000) {
-                for (int i = -1; i < 4; ++i) {
-                    for (int j = -1; j < 4; ++j) {
-                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0 && plateau[souris1.caseY+j][souris1.caseX+i].etat != 1) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
+            DrawTexture(texture3,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+                for (int i = 0; i < 3; ++i) {
+                    for (int j = 0; j < 3; ++j) {
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+3>NB_CASE_LARGEUR || souris1.caseY+3>NB_CASE_HAUTEUR)){
                             verificationConstructionMaison++;
                         }
                     }
@@ -323,7 +440,11 @@ void mainJeu() {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 2;
                         }
                     }
+                    maison1[nbMaisons].numCaseX = souris1.caseX;
+                    maison1[nbMaisons].numCaseY = souris1.caseY;
+                    maison1[nbMaisons].vivable = verificationViable(plateau, souris1.caseX ,souris1.caseY);
                     nbMaisons++;
+                    //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);             // ici
                     monnaie -= 1000;
                 }
             }
@@ -331,10 +452,10 @@ void mainJeu() {
         else if (veut_construire == 2 && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionCentral = 0;
             DrawTexture(texture4,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau && monnaie >= 100000) {
-                for (int i = -1; i < 5; ++i) {
-                    for (int j = -1; j < 7; ++j) {
-                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0 && plateau[souris1.caseY+j][souris1.caseX+i].etat != 1) || (souris1.caseX+6>NB_CASE_LARGEUR || souris1.caseY+4>NB_CASE_HAUTEUR)){
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)  && souris1.interieurPlateau) {
+                for (int i = 0; i < 4; ++i) {
+                    for (int j = 0; j < 6; ++j) {
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+6>NB_CASE_LARGEUR || souris1.caseY+4>NB_CASE_HAUTEUR)){
                             verificationConstructionCentral++;
                         }
                     }
@@ -355,10 +476,10 @@ void mainJeu() {
         else if (veut_construire == 3 && souris1.interieurPlateau && (souris1.caseX + 3 < NB_CASE_LARGEUR && souris1.caseY + 5 < NB_CASE_HAUTEUR)){
             verificationConstructionChateau = 0;
             DrawTexture(texture5,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau && monnaie >= 100000) {
-                for (int i = -1; i < 5; ++i) {
-                    for (int j = -1; j < 7; ++j) {
-                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0 && plateau[souris1.caseY+j][souris1.caseX+i].etat != 1) || (souris1.caseX+4>NB_CASE_LARGEUR || souris1.caseY+6>NB_CASE_HAUTEUR)){
+            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) && souris1.interieurPlateau) {
+                for (int i = 0; i < 4; ++i) {
+                    for (int j = 0; j < 6; ++j) {
+                        if ((plateau[souris1.caseY+j][souris1.caseX+i].etat != 0) || (souris1.caseX+4>NB_CASE_LARGEUR || souris1.caseY+6>NB_CASE_HAUTEUR)){
                             verificationConstructionChateau++;
                         }
                     }
@@ -370,6 +491,8 @@ void mainJeu() {
                             plateau[souris1.caseY+j][souris1.caseX+i].etat = 8;
                         }
                     }
+                    chateaux[nbChateaux].numCaseX = souris1.caseX;
+                    chateaux[nbChateaux].numCaseY = souris1.caseY;
                     monnaie -= 100000;
                     capa_eau += 5000;
                     nbChateaux++;
@@ -410,19 +533,18 @@ void mainJeu() {
 
 
             afficherEtatMonde(monde, afficher_message_reset_routes);
-            rechercheRouteConnecteChateaux(plateau, chateaux, 5, 5);
+
+
+            //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);
 
             dessinertout(timer, souris1);
             EndDrawing();
         }
         sauvegarde("../sauvgarde.txt", plateau);
-    }
+}
+int main() {
+    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
 
-
-
-    int main() {
-        mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste);
-
-        return 0;
-    }
+    return 0;
+}
 

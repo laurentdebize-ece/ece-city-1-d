@@ -40,6 +40,7 @@ typedef struct {
     int nbHabitants;
     bool vivable;
     int eau, electricite;
+    int eauNecessaire, electriciteNecessaire;
     int evolution;
     int prix;
 }Maison;
