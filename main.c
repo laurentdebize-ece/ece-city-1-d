@@ -419,6 +419,7 @@ void mainJeu() {
                 veut_construire = 4;
             }
         }
+
         if (veut_construire == 1 && souris1.interieurPlateau && (souris1.caseX + 2 < NB_CASE_LARGEUR && souris1.caseY + 2 < NB_CASE_HAUTEUR )){
             verificationConstructionMaison = 0;
             DrawTexture(texture6,souris1.caseX * 20 + 20,souris1.caseY * 20 + 20,WHITE);
@@ -511,9 +512,10 @@ void mainJeu() {
                 }
             }
         }
-        else{
+        else if(IsKeyPressed(KEY_SPACE)){
+            veut_construire = nulle;
+        }
 
-            }
             DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
             DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
 

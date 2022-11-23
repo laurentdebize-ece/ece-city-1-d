@@ -290,21 +290,50 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
         if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 30){
             maison1[i].evolution = 1;
             maison1[i].nbHabitants = 10;
+            maison1[i].electriciteNecessaire = 50;
+            maison1[i].eauNecessaire = 50;
         }
         if (maison1[i].tempsDuPlacement >= 30 || maison1[i]. tempsDuPlacement < 45){
             maison1[i].evolution = 2;
             maison1[i].nbHabitants = 50;
+            maison1[i].electriciteNecessaire = 100;
+            maison1[i].eauNecessaire = 100;
         }
         if (maison1[i].tempsDuPlacement >= 45 || maison1[i].tempsDuPlacement < 60){
             maison1[i].evolution = 3;
             maison1[i].nbHabitants = 100;
+            maison1[i].electriciteNecessaire = 1000;
+            maison1[i].eauNecessaire = 1000;
         }
         if(maison1[i].tempsDuPlacement >= 60 || maison1[i].tempsDuPlacement < 75)
             maison1[i].evolution = 4;
         maison1[i].nbHabitants = 1000;
     }
-    for(int i = 0; i < maison1[i].nbHabitants; i++){
+   /* for(int i = 0; i < maison1[i].nbHabitants; i++){
         monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
-    }
+    }*/
 
+}
+void regressionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
+    for(int i = 0; i < nbMaisons; i ++) {
+        if (maison1[i].evolution == 4 && (maison1[i].eau <= 1000 || maison1[i].electricite <= 1000)) {
+            maison1[i].evolution = 3;
+            maison1[i].tempsDuPlacement = 15;
+        }
+        if (maison1[i].evolution == 3 && (maison1[i].eau <= 100 || maison1[i].electricite <= 100)) {
+            maison1[i].evolution = 2;
+            maison1[i].tempsDuPlacement = 15;
+        }
+        if (maison1[i].evolution == 2 && (maison1[i].eau <= 50 || maison1[i].electricite <= 50)) {
+            maison1[i].evolution = 1;
+            maison1[i].tempsDuPlacement = 15;
+        }
+        if (maison1[i].evolution == 1 && (maison1[i].eau <= 10 || maison1[i].electricite <= 10)) {
+            maison1[i].evolution = 0;
+            maison1[i].tempsDuPlacement = 15;
+        }
+    }
+    /*for(int i = 0; i < maison1[i].nbHabitants; i++){
+        monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
+    }*/
 }
