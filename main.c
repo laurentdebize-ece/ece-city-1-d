@@ -546,14 +546,14 @@ void mainJeu() {
             //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);
 
         for(int i = 0; i < nbMaisons; i ++) {
-            //if(maison1[i].vivable) {
-            maison1[i].tempsDuPlacement += GetFrameTime();
+            if(maison1[i].vivable) {
+            maison1[i].tempsDuPlacement += GetFrameTime(); //si on met nbmaison a la place de i ca fonctionne
                 if (maison1[i].tempsDuPlacement >= 15){
                     maison1[i].tempsDuPlacement = 0;
                     maison1[i].evolution++;
                 }
 
-            //}
+            }
         }
 
         dessinertout(timer, souris1);
