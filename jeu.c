@@ -386,10 +386,12 @@ void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 // recherche de central
-                switch (plateau[y+i][x+j].etat) {
+                if (!(i == j || i == -j)) {
+
+                switch (plateau[y + i][x + j].etat) {
                     case 1 : {
-                        plateau[y+i][x+j].etat = 22;
-                        rechercheCentral(plateau, x+j, y+i, connecteEau, connecteElec);
+                        plateau[y + i][x + j].etat = 22;
+                        rechercheCentral(plateau, x + j, y + i, connecteEau, connecteElec);
                         break;
                     }
                     case 7 : {
@@ -402,6 +404,7 @@ void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int
                         break;
                     }
                 }
+            }
             }
         }
     }
