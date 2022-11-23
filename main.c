@@ -436,7 +436,7 @@ void mainJeu() {
                     maison1[nbMaisons].numCaseX = souris1.caseX;
                     maison1[nbMaisons].numCaseY = souris1.caseY;
                     maison1[nbMaisons].vivable = verificationViable(plateau, souris1.caseX ,souris1.caseY); //renvoie 1 si viabilité ok
-                    maison1[nbMaisons].tempsDuPlacement = 15;
+                    maison1[nbMaisons].tempsDuPlacement = 0;
                     nbMaisons++;
                     //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);             // ici
                     monnaie -= 1000;
@@ -537,13 +537,14 @@ void mainJeu() {
         //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);
 
         for(int i = 0; i < nbMaisons; i ++) {
-            if(maison1[i].vivable) {
+            //if(maison1[i].vivable) {
+            maison1[i].tempsDuPlacement += GetFrameTime();
                 if (maison1[i].tempsDuPlacement >= 15){
                     maison1[i].tempsDuPlacement = 0;
                     maison1[i].evolution++;
                 }
-                maison1[nbMaisons].tempsDuPlacement += GetFrameTime();
-            }
+
+            //}
         }
 
         dessinertout(timer, souris1);
