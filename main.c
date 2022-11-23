@@ -162,36 +162,22 @@ void mainJeu() {
     Image chateau_d_eau;
     Image fond_map;
 
-    ruine = LoadImage("../batiments/Ruine.png");
+
     terrain_vague = LoadImage("../batiments/Terrain_Vague1.png");
-    cabane = LoadImage("../batiments/Cabane.png");
-    maison = LoadImage("../batiments/Maison.png");
-    immeuble = LoadImage("../batiments/Immeuble.png");
-    gratte_ciel = LoadImage("../batiments/Gratte_ciel.png");
     centrale = LoadImage("../batiments/Centrale_electrique_2.png");
     chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
-    fond_map = LoadImage("../batiments/fond_map.png");
 
-    Texture2D texture3 = LoadTextureFromImage(cabane);
+
+
     Texture2D texture4 = LoadTextureFromImage(centrale);
     Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
     Texture2D texture6 = LoadTextureFromImage(terrain_vague);
-    Texture2D texture7 = LoadTextureFromImage(fond_map);
-    Texture2D texture8 = LoadTextureFromImage(ruine);
-    Texture2D texture9 = LoadTextureFromImage(maison);
-    Texture2D texture10 = LoadTextureFromImage(immeuble);
-    Texture2D texture11 = LoadTextureFromImage(gratte_ciel);
+
     //ImageResize(&terrain_vague, 60, 60);
 
-
-    UnloadImage(cabane);
     UnloadImage(centrale);
     UnloadImage(chateau_d_eau);
     UnloadImage(terrain_vague);
-    UnloadImage(ruine);
-    UnloadImage(maison);
-    UnloadImage(immeuble);
-    UnloadImage(gratte_ciel);
 
 
     initialiserPlateau(plateau);
@@ -224,32 +210,6 @@ void mainJeu() {
         //evolutionbatiment(&maison1[100], nbMaisons, monnaie);
 
         dessinerBasePlateau(plateau);
-
-        for (int i = 0; i < 100; ++i) {
-            switch (maison1[i].evolution) {
-                case 0 : {
-                    maison1[i].fileName = "../batiments/Terrain_Vague1.png";
-                    break;
-                }
-                case 1 : {
-                    maison1[i].fileName = "../batiments/Cabane.png";
-                    break;
-                }
-                case 2 : {
-                    maison1[i].fileName = "../batiments/Maison.png";
-                    break;
-                }
-                case 3 : {
-                    maison1[i].fileName = "../batiments/Immeuble.png";
-                    break;
-                }
-                case 4 : {
-                    maison1[i].fileName = "../batiments/Gratte_ciel.png";
-                    break;
-                }
-
-            }
-        }
 
         for (int i = 0; i < 35; i++) {
             for (int j = 0; j < 45; j++) {
@@ -321,11 +281,9 @@ void mainJeu() {
         }
         if (IsKeyPressed(KEY_ENTER)) {
             monde = 0;
-            maison1[0].evolution++; // ligne test
         }
         if (IsKeyDown(KEY_BACKSPACE)) {
             reset_routes = true;
-            maison1[0].evolution--; // ligne test
         } else {
             if (reset_routes == true) {
                 reset_routes = false;
@@ -383,10 +341,6 @@ void mainJeu() {
                     nbMaisons++;
                     //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);             // ici
                     monnaie -= 1000;
-                    habitant += 10;
-
-
-
                 }
             }
         }
@@ -469,28 +423,25 @@ void mainJeu() {
             dessinerVariables(rec_monnaie, rec_habitant, rec_capa_elec, rec_capa_eau, mouse_pos, monnaie, habitant,
                               capa_elec, capa_eau);
 
-
             dessinerCasesChoixConstruction(mouse_pos, rec_construire_cabane, rec_routes_reset,
                                            rec_construire_centrale, rec_construire_chateau_d_eau,
                                            rec_construire_route);
 
-
             afficherEtatMonde(monde, afficher_message_reset_routes);
 
-
             //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);
-
-        for(int i = 0 ; i < nbMaisons ; i ++) {
+        miseajourtimer(maison1, nbMaisons);
+        evolutionbatiment(maison1,  nbMaisons, &capa_eau, &capa_elec, &habitant);
+       // regressionbatiment(maison1,nbMaisons,&habitant,&capa_eau,&capa_elec);
+        /*for(int i = 0 ; i < nbMaisons ; i ++) {
             if(maison1[i].vivable) {
                 maison1[i].tempsDuPlacement += GetFrameTime();
                 if (maison1[i].tempsDuPlacement >= 15){
                     maison1[i].tempsDuPlacement = 0;
                     maison1[i].evolution++;
                 }
-
-
             }
-        }
+        }*/
 
         DrawText(TextFormat("%.0f", maison1[0].tempsDuPlacement), 1000, 650, 30, WHITE);
         DrawText(TextFormat("%.0f", maison1[1].tempsDuPlacement), 1100, 650, 30, WHITE);
@@ -504,4 +455,3 @@ int main() {
 
     return 0;
 }
-

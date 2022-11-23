@@ -279,57 +279,99 @@ void initialiserbatiment(Maison batiment){
 //- Château d’eau : 100 000 ECE-flouz
 //- Route : 10 ECE-flouz par unité de grille
 
+void miseajourtimer(Maison maison1[100], int nbMaisons){
+   for(int i = 0; i < nbMaisons; i ++){
+       if(maison1[i].vivable)
+           maison1[i].tempsDuPlacement += GetFrameTime();
+   }
+}
 
-void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
-
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *capa_elec, int *habitant) {
     for(int i = 0; i < nbMaisons; i ++) {
-        if (maison1[i].tempsDuPlacement < 15 &&maison1[i].prix >= 10000 ) { // Terrain vague : 1000 ECE-flouz
+        if (maison1[i].tempsDuPlacement < 15) { // Terrain vague : 1000 ECE-flouz
             maison1[i].evolution = 0;
+            maison1[i].fileName = "../batiments/Terrain_Vague1.png";
             maison1[i].nbHabitants = 0;
         }
-        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 30){
+        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 15 + GetFrameTime()){
             maison1[i].evolution = 1;
+            maison1[i].fileName = "../batiments/Cabane.png";
             maison1[i].nbHabitants = 10;
+            maison1[i].electriciteNecessaire = 10;
+            maison1[i].eauNecessaire = 10;
+            *habitant += 10;
+            *capa_elec -= 10;
+            *capa_eau -= 10;
+        }
+        if (maison1[i].tempsDuPlacement >= 30 && maison1[i]. tempsDuPlacement < 30 + GetFrameTime()){
+            maison1[i].evolution = 2;
+            maison1[i].fileName = "../batiments/Maison.png";
+            maison1[i].nbHabitants = 50;
             maison1[i].electriciteNecessaire = 50;
             maison1[i].eauNecessaire = 50;
+            *habitant += 40;
+            *capa_elec -= 40;
+            *capa_eau -= 40;
         }
-        if (maison1[i].tempsDuPlacement >= 30 || maison1[i]. tempsDuPlacement < 45){
-            maison1[i].evolution = 2;
-            maison1[i].nbHabitants = 50;
+        if (maison1[i].tempsDuPlacement >= 45 && maison1[i].tempsDuPlacement < 45 + GetFrameTime()){
+            maison1[i].evolution = 3;
+            maison1[i].fileName = "../batiments/Immeuble.png";
+            maison1[i].nbHabitants = 100;
             maison1[i].electriciteNecessaire = 100;
             maison1[i].eauNecessaire = 100;
+            *habitant += 50;
+            *capa_elec -= 50;
+            *capa_eau -= 50;
         }
-        if (maison1[i].tempsDuPlacement >= 45 || maison1[i].tempsDuPlacement < 60){
-            maison1[i].evolution = 3;
-            maison1[i].nbHabitants = 100;
+        if(maison1[i].tempsDuPlacement >= 60 && maison1[i].tempsDuPlacement < 60 + GetFrameTime()){
+            maison1[i].evolution = 4;
+            maison1[i].fileName = "../batiments/Gratte_ciel.png";
+            maison1[i].nbHabitants = 1000;
             maison1[i].electriciteNecessaire = 1000;
             maison1[i].eauNecessaire = 1000;
+            *habitant += 900;
+            *capa_elec -= 900;
+            *capa_eau -= 900;
         }
-        if(maison1[i].tempsDuPlacement >= 60 || maison1[i].tempsDuPlacement < 75)
-            maison1[i].evolution = 4;
-        maison1[i].nbHabitants = 1000;
+
     }
    /* for(int i = 0; i < maison1[i].nbHabitants; i++){
         monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
     }*/
 
 }
-void regressionbatiment(Maison maison1[100], int nbMaisons, int monnaie) {
+void regressionbatiment(Maison maison1[100], int nbMaisons, int* habitant, int* capa_elec, int* capa_eau) {
     for(int i = 0; i < nbMaisons; i ++) {
         if (maison1[i].evolution == 4 && (maison1[i].eau <= 1000 || maison1[i].electricite <= 1000)) {
             maison1[i].evolution = 3;
+            maison1[i].nbHabitants = 100;
+            habitant -= 900;
+            capa_elec += 900;
+            capa_eau += 900;
             maison1[i].tempsDuPlacement = 15;
         }
         if (maison1[i].evolution == 3 && (maison1[i].eau <= 100 || maison1[i].electricite <= 100)) {
             maison1[i].evolution = 2;
+            maison1[i].nbHabitants = 50;
+            habitant -= 50;
+            capa_elec += 50;
+            capa_eau += 50;
             maison1[i].tempsDuPlacement = 15;
         }
         if (maison1[i].evolution == 2 && (maison1[i].eau <= 50 || maison1[i].electricite <= 50)) {
             maison1[i].evolution = 1;
+            maison1[i].nbHabitants = 10;
+            habitant -= 40;
+            capa_elec += 40;
+            capa_eau += 40;
             maison1[i].tempsDuPlacement = 15;
         }
         if (maison1[i].evolution == 1 && (maison1[i].eau <= 10 || maison1[i].electricite <= 10)) {
             maison1[i].evolution = 0;
+            maison1[i].nbHabitants = 0;
+            habitant -= 10;
+            capa_elec += 10;
+            capa_eau += 10;
             maison1[i].tempsDuPlacement = 15;
         }
     }

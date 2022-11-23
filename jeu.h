@@ -110,10 +110,12 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 
 void dessinertout(float timer,souris souris1);
 
+void miseajourtimer(Maison maisons1[100], int nbMaisons);
 
 
 void initialiserbatiment(Maison maison);
-void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie);
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *capa_elec, int* habitant);
+void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int* capa_elec, int * capa_eau);
 
 void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec);
 int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y);
