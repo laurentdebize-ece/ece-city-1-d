@@ -110,6 +110,12 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 
 void dessinertout(float timer,souris souris1);
 
+
+
 void initialiserbatiment(Maison maison);
 void evolutionbatiment(Maison maison1[100], int nbMaisons, int monnaie);
+
+void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec);
+int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y);
+void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons);
 #endif //BAC_A_SABLE_1_D_JEU_H
