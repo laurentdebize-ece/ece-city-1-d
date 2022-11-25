@@ -69,95 +69,9 @@ void rechercheChateauxEau(Case **plateau, Central *tableauChateaux) {
     }
 }
 
-void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, int nbMaisons) {
-    for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment >= 100) {
-                plateau[y + i][x + j].etat = 34;
-                *numMaison = plateau[y + i][x + j].batiment - 100;
-                return;
-            }
-            if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment < 100) {
-                plateau[y + i][x + j].etat = 33;
-                rechercheMaison(numMaison, maison, x + j, y + j, nbMaisons);
-            }
-        }
-    }
-}
 
 
-void
-analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],
-                   int *MaisonTrouveNum, int *compteurDistance, int *compteurMaisonsTrouve) {
-    int numMaisonTrouve = -1;
 
-    for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            if (i != j || i != -j) {
-                if (plateau[y + i][x + j].etat == 1) {
-                    plateau[y + i][x + j].etat = 22;
-                    *compteurDistance += 1;
-                    analyseChateauxEau(plateau, chateaux, x + j, y + i, maisons, MaisonTrouveNum, compteurDistance,
-                                       compteurMaisonsTrouve);
-                }
-                if (plateau[y + i][x + j].etat == 2) {
-                    rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, nbMaisons);
-                    if (numMaisonTrouve != -1) {
-                        plateau[numMaisonTrouve + 5][0].etat = 36;  // test
-                        *compteurMaisonsTrouve += 1;
-                        maisons[numMaisonTrouve].distanceChateau = *compteurDistance;
-                        chateaux->tabMaisonAlim[*compteurMaisonsTrouve].numMaison = numMaisonTrouve;
-                        //chateaux->tabMaisonAlim[0].numMaison = 2;
-                        plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
-                    }
-                    //chateaux.capaciteutilise += maison[numMaisonTrouve].eauNecessaire;
-                }
-            }
-        }
-    }
-    *MaisonTrouveNum = numMaisonTrouve;
-}
-
-void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
-                                    int nbChateauEau, Maison maisons[100]) {
-    int compteur;
-    int compteurDistance = 1;
-    //int compteurMaisonsTrouve = 0;
-    chateaux[0].tabMaisonAlim[0].numMaison = -1;
-
-    for (int nb = 0; nb < nbChateauEau; nb++) {
-        x = chateaux[nb].numCaseX;
-        y = chateaux[nb].numCaseY;
-        compteur = 0;
-        for (int i = -1; i < 5; i++) {
-            for (int j = -1; j < 7; j++) {
-                compteur++;
-                if (plateau[j + y][i + x].etat == 1 &&
-                    (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {
-                    //DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
-                    analyseChateauxEau(plateau, &chateaux[nbChateauEau], x + i, y + j, maisons,
-                                       &numeroMaisonConnecteChateau, &compteurDistance, &compteurMaisonsTrouve);
-                    DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
-                    nbChateauEau++;
-                }
-            }
-        }
-    }
-    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
-        for (int j = 0; j < NB_CASE_LARGEUR; j++) {
-            if (plateau[i][j].etat == 22) {
-                plateau[i][j].etat = 1;
-            }
-            if (plateau[i][j].etat == 33 || plateau[i][j].etat == 34) {
-                plateau[i][j].etat = 2;
-            }
-        }
-    }
-
-    for (int i = 0; i < compteurMaisonsTrouve; ++i) {
-
-    }
-}
 
 
 void mainJeu() {
@@ -211,7 +125,14 @@ void mainJeu() {
     }
     //liresauv("../sauvgarde.txt", plateau);
 
-    maison1[0].distanceChateau = -1;    // test
+    for (int i = 0; i < 20; i++) {
+        chateaux[i].capaciteMax = 5000;
+        chateaux[i].capaciteutilise = 0;
+        for (int j = 0; j < 20; j++) {
+            chateaux[i].tabMaisonAlim[j].numMaison = -1;
+        }
+    }
+
 
     while (!WindowShouldClose()) {
 
@@ -256,8 +177,7 @@ void mainJeu() {
                         plateau[i][j].etat = 1;
                         //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux); // ici
                         verificationMaisonNonViables(plateau, maison1, nbMaisons);
-                        rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
-
+                        //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1, compteurMaisonsTrouve);
                     }
                 }
 
@@ -268,11 +188,11 @@ void mainJeu() {
                 }
                 for (int k = 0; k < nbMaisons; k++) {
                     if (maison1[k].vivable == 0) {
-                        DrawRectangle(maison1[k].numCaseX * 20 + 20, maison1[k].numCaseY * 20 + 20, 20, 20, BLACK);
+                        //DrawRectangle(maison1[k].numCaseX * 20 + 20, maison1[k].numCaseY * 20 + 20, 20, 20, BLACK);
                     }
                 }
-                if (plateau[i][j].etat == 33) {   // test
-                    //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, PURPLE);
+                if (plateau[i][j].etat == 77) {   // test
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20, PURPLE);
                     //DrawRectangle(0, 0, 20, 20, YELLOW);
                 }
                 if (plateau[i][j].etat == 36) {   // test
@@ -439,9 +359,9 @@ void mainJeu() {
 //DrawRectangleLines(1200,400,250,130,WHITE);
             for(int i = 0 ; i < nbChateaux; i++){
                 DrawText(TextFormat("Châteaux numero %d",i+1),1210+i*300,410,20,WHITE);
-                DrawText(TextFormat("Ressources : %d",chateaux->ressource),1210 +i*300,500,20,WHITE);
-                DrawText(TextFormat("Capacité maximale : %d", chateaux->capaciteMax), 1210+i*300, 440, 20, WHITE);
-                DrawText(TextFormat("Capacité utilisée : %d",chateaux->capaciteutilise), 1210+i*300, 470, 20, WHITE);
+                DrawText(TextFormat("Ressources : %d",chateaux[i].ressource),1210 +i*300,500,20,WHITE);
+                DrawText(TextFormat("Capacité maximale : %d", chateaux[i].capaciteMax), 1210+i*300, 440, 20, WHITE);
+                DrawText(TextFormat("Capacité utilisée : %d",chateaux[i].capaciteutilise), 1210+i*300, 470, 20, WHITE);
             }
         }
         if(info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].etat == 7){//elec

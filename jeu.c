@@ -214,6 +214,7 @@ void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
         for (int j = 0; j < 45; j++) {
             if (plateau[i][j].etat == 0) {
                 DrawTexture(texture6,plateau[i][j].x,plateau[i][j].y,WHITE);
+                //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20,20,GREEN);
                 DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, BLACK);
             }
         }
@@ -339,6 +340,16 @@ void miseajourtimer(Maison maison1[100], int nbMaisons){
 
 void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *capa_elec, int *habitant) {
     for(int i = 0; i < nbMaisons; i ++) {
+        if (maison1[i].tempsDuPlacement > 15) { // Terrain vague : 1000 ECE-flouz
+            maison1[i].evolution++;
+            maison1[i].tempsDuPlacement = 0;
+
+
+
+
+            maison1[i].fileName = "../batiments/Terrain_Vague1.png";
+            maison1[i].nbHabitants = 0;
+        }
         if (maison1[i].tempsDuPlacement < 15) { // Terrain vague : 1000 ECE-flouz
             maison1[i].evolution = 0;
             maison1[i].fileName = "../batiments/Terrain_Vague1.png";
@@ -496,4 +507,113 @@ void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]
             //DrawRectangle(maison1[i].numCaseX * 20 + 20, maison1[i].numCaseY * 20 + 20, 20,20,GREEN);
         }
     }
+}
+
+void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment >= 100) {
+                plateau[y + i][x + j].etat = 34;
+                *numMaison = plateau[y + i][x + j].batiment - 100;
+                //return;
+            }
+            if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment < 100) {
+                plateau[y + i][x + j].etat = 33;
+                rechercheMaison(numMaison, maison, x + j, y + j, plateau);
+            }
+        }
+    }
+}
+
+
+
+void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],int compteurDistance) {
+    int numMaisonTrouve = -1;
+
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (i != j && i != -j) {
+                if (plateau[y + i][x + j].etat == 1) {
+                    plateau[y + i][x + j].etat = 22;
+                    analyseChateauxEau(plateau, chateaux, x + j, y + i, maisons, compteurDistance+1);
+                }
+                if (plateau[y + i][x + j].etat == 2) {
+                    rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, plateau);
+                    if (numMaisonTrouve != -1) {
+                        plateau[numMaisonTrouve + 5][0].etat = 36;  // test
+                        // maisons[numMaisonTrouve].distanceChateau = compteurDistance;
+                        chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].numMaison = numMaisonTrouve;
+                        chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].distance = compteurDistance;
+                        chateaux->nbMaisonAlim ++;
+                        //chateaux->tabMaisonAlim[0].numMaison = 2;
+                        plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
+                    }
+                    //chateaux.capaciteutilise += maison[numMaisonTrouve].eauNecessaire;
+                }
+            }
+        }
+    }
+    //*MaisonTrouveNum = numMaisonTrouve;
+}
+
+
+void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
+                                    int nbChateauEau, Maison maison1[100], int compteurMaisonsTrouve) {
+
+    //int compteurMaisonsTrouve = 0;
+    chateaux[0].tabMaisonAlim[0].numMaison = -1;
+
+    for (int nb = 0; nb < nbChateauEau; nb++) {
+        x = chateaux[nb].numCaseX;
+        y = chateaux[nb].numCaseY;
+        int compteur = 0;
+        for (int i = -1; i < 5; i++) {
+            for (int j = -1; j < 7; j++) {
+                compteur++;
+                if (plateau[j + y][i + x].etat == 1 &&
+                    (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {
+                    //DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
+                    analyseChateauxEau(plateau, &chateaux[nb], x + i, y + j, maison1, 1);
+                    DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
+                    compteurMaisonsTrouve=0;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+        for (int j = 0; j < NB_CASE_LARGEUR; j++) {
+            if (plateau[i][j].etat == 22) {
+                plateau[i][j].etat = 1;
+            }
+            if (plateau[i][j].etat == 33 || plateau[i][j].etat == 34) {
+                plateau[i][j].etat = 2;
+            }
+        }
+    }
+
+    int PPdistance = 9999; // plus petite distance
+    int numMaisonPlusProche = -1;
+    for (int i = 0; i < nbChateauEau; i++) {
+        for (int j = 0; j < 20; j++) {
+            chateaux[i].tabMaisonAlim[j].verification = 0;
+        }
+    }
+
+
+    for (int i = 0; i < nbChateauEau; i++) {
+        for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {
+            if (chateaux[i].tabMaisonAlim[j].distance<=PPdistance && chateaux[i].tabMaisonAlim[j].verification == 0){
+                numMaisonPlusProche = chateaux[i].tabMaisonAlim[j].numMaison;
+            }
+        }
+        if (numMaisonPlusProche!=-1) {
+            if ((chateaux[i].capaciteMax - chateaux[i].capaciteutilise) >= maison1[numMaisonPlusProche].eauNecessaire) {
+                chateaux[i].capaciteutilise += maison1[numMaisonPlusProche].eauNecessaire;
+                maison1[numMaisonPlusProche].eau = maison1[numMaisonPlusProche].eauNecessaire;
+                plateau[maison1[numMaisonPlusProche].numCaseY][maison1[numMaisonPlusProche].numCaseX].etat = 77;    // test
+            }
+        }
+    }
+
+
 }

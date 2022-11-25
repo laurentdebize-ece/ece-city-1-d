@@ -52,6 +52,8 @@ typedef struct {
 typedef struct {
     int numMaison;
     int ressourcesAlim;
+    int distance;
+    int verification;
 }MaisonAlim;
 
 typedef struct {
@@ -122,4 +124,8 @@ void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int* 
 void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec);
 int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y);
 void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons);
+void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
+void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],int compteurDistance);
+void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
+                                    int nbChateauEau, Maison maisons[100], int compteurMaisonsTrouve);
 #endif //BAC_A_SABLE_1_D_JEU_H
