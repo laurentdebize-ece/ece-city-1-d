@@ -73,39 +73,39 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
             }
         }
         if( *quitter2 == true){
-                DrawTexture(texture, 0, 0, WHITE);
-                Rectangle rec_CREDIT = {748, 108, 238, 92};
-                Rectangle rec_JOUER = {1038, 108, 238, 92};
-                Rectangle rec_QUITTER = {1328, 108, 238, 92};
-                DrawRectangleLinesEx(rec_CREDIT, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : GREEN);
-                DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
-                DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                    *jouer = true;
-                }
-                if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                    *quitter = true;
+            DrawTexture(texture, 0, 0, WHITE);
+            Rectangle rec_CREDIT = {748, 108, 238, 92};
+            Rectangle rec_JOUER = {1038, 108, 238, 92};
+            Rectangle rec_QUITTER = {1328, 108, 238, 92};
+            DrawRectangleLinesEx(rec_CREDIT, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : GREEN);
+            DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
+            DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                *jouer = true;
+            }
+            if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                *quitter = true;
 
-                } if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                    *credits = true;
-                }
+            } if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                *credits = true;
+            }
 
-                if (*quitter == true) {
-                    CloseWindow();
+            if (*quitter == true) {
+                CloseWindow();
+            }
+            if (*jouer == true) {
+                DrawTexture(texture2, 0, 0, WHITE);
+                Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
+                Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
+                DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
+                DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
+                if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    *communiste = true;
+                    mainJeu();
+                } else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    *capitaliste = true;
+                    mainJeu();
                 }
-                if (*jouer == true) {
-                    DrawTexture(texture2, 0, 0, WHITE);
-                    Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
-                    Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
-                    DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
-                    DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
-                    if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                        *communiste = true;
-                        mainJeu();
-                    } else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                        *capitaliste = true;
-                        mainJeu();
-                    }
-                }
+            }
         }
 
         EndDrawing();
@@ -331,10 +331,10 @@ void initialiserbatiment(Maison batiment){
 //- Route : 10 ECE-flouz par unité de grille
 
 void miseajourtimer(Maison maison1[100], int nbMaisons){
-   for(int i = 0; i < nbMaisons; i ++){
-       if(maison1[i].vivable)
-           maison1[i].tempsDuPlacement += GetFrameTime();
-   }
+    for(int i = 0; i < nbMaisons; i ++){
+        if(maison1[i].vivable)
+            maison1[i].tempsDuPlacement += GetFrameTime();
+    }
 }
 
 void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *capa_elec, int *habitant) {
@@ -386,9 +386,9 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *c
         }
 
     }
-   /* for(int i = 0; i < maison1[i].nbHabitants; i++){
-        monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
-    }*/
+    /* for(int i = 0; i < maison1[i].nbHabitants; i++){
+         monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
+     }*/
 
 }
 void regressionbatiment(Maison maison1[100], int nbMaisons, int* habitant, int* capa_elec, int* capa_eau) {
@@ -439,23 +439,23 @@ void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int
                 // recherche de central
                 if (!(i == j || i == -j)) {
 
-                switch (plateau[y + i][x + j].etat) {
-                    case 1 : {
-                        plateau[y + i][x + j].etat = 22;
-                        rechercheCentral(plateau, x + j, y + i, connecteEau, connecteElec);
-                        break;
-                    }
-                    case 7 : {
-                        // on a trouvé une centrale
-                        *connecteElec = true;
-                        break;
-                    }
-                    case 8 : {
-                        *connecteEau = true;
-                        break;
+                    switch (plateau[y + i][x + j].etat) {
+                        case 1 : {
+                            plateau[y + i][x + j].etat = 22;
+                            rechercheCentral(plateau, x + j, y + i, connecteEau, connecteElec);
+                            break;
+                        }
+                        case 7 : {
+                            // on a trouvé une centrale
+                            *connecteElec = true;
+                            break;
+                        }
+                        case 8 : {
+                            *connecteEau = true;
+                            break;
+                        }
                     }
                 }
-            }
             }
         }
     }

@@ -40,7 +40,7 @@ bool veutConstruireCentral = false;
 int verificationConstructionChateau = 0;
 bool veutConstruireChateau = false;
 int verificationConstructionRoutes = 0;
-
+bool info = true;
 int numeroMaisonConnecteChateau = -1;
 int compteurMaisonsTrouve = -1;
 
@@ -433,8 +433,37 @@ void mainJeu() {
             }
         } else if (IsKeyPressed(KEY_SPACE)) {
             veut_construire = nulle;
+            info = !info;
         }
-
+        if(info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].etat == 8){//eau
+//DrawRectangleLines(1200,400,250,130,WHITE);
+            for(int i = 0 ; i < nbChateaux; i++){
+                DrawText(TextFormat("Châteaux numero %d",i+1),1210+i*300,410,20,WHITE);
+                DrawText(TextFormat("Ressources : %d",chateaux->ressource),1210 +i*300,500,20,WHITE);
+                DrawText(TextFormat("Capacité maximale : %d", chateaux->capaciteMax), 1210+i*300, 440, 20, WHITE);
+                DrawText(TextFormat("Capacité utilisée : %d",chateaux->capaciteutilise), 1210+i*300, 470, 20, WHITE);
+            }
+        }
+        if(info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].etat == 7){//elec
+//DrawRectangleLines(1200,400,250,130,WHITE);
+            for(int i = 0 ; i < nbCentrales; i++){
+                DrawText(TextFormat("Centrale numero %d",i+1),1210+i*300,410,20,WHITE);
+                DrawText(TextFormat("Ressources : %d",electricite->ressource),1210 +i*300,500,20,WHITE);
+                DrawText(TextFormat("Capacité maximale : %d", electricite->capaciteMax), 1210+i*300, 440, 20, WHITE);
+                DrawText(TextFormat("Capacité utilisée : %d",electricite->capaciteutilise), 1210+i*300, 470, 20, WHITE);
+            }
+        }
+        if(info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].etat == 2){
+//DrawRectangleLines(1200,400,700,200,WHITE);
+            for(int i = 0; i < nbMaisons; i++){
+                DrawText(TextFormat("Maison numéro %d",i+1),1210+i*300,410,20,WHITE);
+                DrawText(TextFormat("Habitants : %d",maison1[i].nbHabitants), 1210 + i*300, 440, 20, WHITE);
+                DrawText(TextFormat("Eau disponible : %d",maison1[i].eau), 1210 + i*300, 470, 20, WHITE);
+                DrawText(TextFormat("Electricité disponible : %d",maison1[i].electricite), 1210 + i*300, 500, 20, WHITE);
+                DrawText(TextFormat("Eau nécessaire : %d",maison1[i].eauNecessaire), 1210 + i*300, 530, 20, WHITE);
+                DrawText(TextFormat("Electricité nécessaire : %d",maison1[i].electriciteNecessaire), 1210 + i*300, 560, 20, WHITE);
+            }
+        }
         DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
         DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
 
@@ -480,3 +509,6 @@ int main() {
 
     return 0;
 }
+
+
+
