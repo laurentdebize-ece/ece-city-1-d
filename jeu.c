@@ -2,7 +2,6 @@
 
 
 int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2) {
-
     Image menu;
     Image mode;
     Image credit;

@@ -43,6 +43,8 @@ typedef struct {
     int eauNecessaire, electriciteNecessaire;
     int evolution;
     int prix;
+    int distanceChateau;
+    int distanceCentral;
 }Maison;
 
 
