@@ -63,17 +63,49 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
                 mainJeu();
             }
         }
-        if (*credits == true){
+        if (*credits == true) {
             DrawTexture(texture3, 0, 0, WHITE);
-            Rectangle rec_QUITTER2 ={60, 60, 60, 60};
+            Rectangle rec_QUITTER2 = {57, 50, 130, 40};
             DrawRectangleLinesEx(rec_QUITTER2, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : WHITE);
             if (CheckCollisionPointRec(mouse_pos, rec_QUITTER2) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *quitter2 = true;
 
             }
-            if( *quitter2 == true){
+        }
+        if( *quitter2 == true){
                 DrawTexture(texture, 0, 0, WHITE);
-            }
+                Rectangle rec_CREDIT = {748, 108, 238, 92};
+                Rectangle rec_JOUER = {1038, 108, 238, 92};
+                Rectangle rec_QUITTER = {1328, 108, 238, 92};
+                DrawRectangleLinesEx(rec_CREDIT, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : GREEN);
+                DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
+                DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    *jouer = true;
+                }
+                if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    *quitter = true;
+
+                } if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    *credits = true;
+                }
+
+                if (*quitter == true) {
+                    CloseWindow();
+                }
+                if (*jouer == true) {
+                    DrawTexture(texture2, 0, 0, WHITE);
+                    Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
+                    Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
+                    DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
+                    DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
+                    if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                        *communiste = true;
+                        mainJeu();
+                    } else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                        *capitaliste = true;
+                        mainJeu();
+                    }
+                }
         }
 
         EndDrawing();
