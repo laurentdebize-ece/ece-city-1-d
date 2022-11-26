@@ -157,6 +157,9 @@ void mainJeu() {
                             if (veut_construire == 4) {
                                 veut_construire = 0;
                             }
+                            if (plateau[souris1.caseY][souris1.caseX].etat == 1) {
+                                monnaie += 5;
+                            }
                             plateau[souris1.caseY][souris1.caseX].etat = 0;
                         }
                     } else if (reset_routes == false) {
@@ -341,11 +344,13 @@ void mainJeu() {
             if (plateau[souris1.caseY][souris1.caseX].etat != 1 && plateau[souris1.caseY][souris1.caseX].etat != 0) {
                 verificationConstructionRoutes = 1;
             }
-            if (verificationConstructionRoutes == 0 && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            if (verificationConstructionRoutes == 0 && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && monnaie >= 10) {
                 if (souris1.interieurPlateau && monde == 0) {
+                    if (plateau[souris1.caseY][souris1.caseX].etat == 0){
+                        monnaie -= 10;
+                    }
                     plateau[souris1.caseY][souris1.caseX].etat = 1;
                     plateau[souris1.caseY][souris1.caseX].batiment = 0;
-                    monnaie -= 10;
                 }
             }
         } else if (IsKeyPressed(KEY_SPACE)) {
