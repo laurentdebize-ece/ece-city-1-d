@@ -26,6 +26,7 @@ int capitaliste;
 int jouer;
 int quitter;
 int quitter2;
+int charger;
 int credits;
 float timer = 5;
 int monde_eau;
@@ -235,6 +236,8 @@ void mainJeu() {
             //DrawRectangle(0,0,50,50,RED);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 veut_construire = 1;
+
+
             }
         }
         if (CheckCollisionPointRec(mouse_pos, rec_construire_centrale)) {
@@ -384,6 +387,7 @@ void mainJeu() {
                 DrawText(TextFormat("Electricité nécessaire : %d",maison1[i].electriciteNecessaire), 1210 + i*300, 560, 20, WHITE);
             }
         }
+
         DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
         DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
 
@@ -425,7 +429,7 @@ void mainJeu() {
 }
 
 int main() {
-    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste, &quitter2);
+    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste, &quitter2, &charger);
 
     return 0;
 }

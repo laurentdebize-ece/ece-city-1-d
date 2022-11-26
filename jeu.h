@@ -72,7 +72,7 @@ typedef struct {
 
 
 /////////////////////////////// Main ////////////////////////////////////////////
-int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2);
+int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2, int *charger);
 
 void mainJeu();
 

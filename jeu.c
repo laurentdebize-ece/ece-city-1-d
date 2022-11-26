@@ -1,7 +1,7 @@
 #include "jeu.h"
 
 
-int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2) {
+int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2, int *charger) {
     Image menu;
     Image mode;
     Image credit;
@@ -10,7 +10,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(60);
     MaximizeWindow();
-    menu = LoadImage("../menu/menu.png");
+    menu = LoadImage("../menu/menu2.png");
     mode = LoadImage("../menu/mode.png");
     credit = LoadImage("../menu/credits.png");
     ImageDrawPixel(&menu, 0, 0, RAYWHITE);
@@ -32,20 +32,28 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
         Rectangle rec_CREDIT = {748, 108, 238, 92};
         Rectangle rec_JOUER = {1038, 108, 238, 92};
         Rectangle rec_QUITTER = {1328, 108, 238, 92};
+        Rectangle rec_SAUVEGARDE = {9, 30, 245, 99};
+        DrawRectangleLinesEx(rec_SAUVEGARDE, 4, CheckCollisionPointRec(mouse_pos, rec_SAUVEGARDE) ? SKYBLUE : GREEN);
         DrawRectangleLinesEx(rec_CREDIT, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : GREEN);
         DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
         DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);
 
         if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            *charger = false;
             *jouer = true;
+
         }
         if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             *quitter = true;
 
-        } if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        }
+        if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             *credits = true;
         }
-
+        if (CheckCollisionPointRec(mouse_pos, rec_SAUVEGARDE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            *charger = true;
+            *jouer = true;
+        }
         if (*quitter == true) {
             CloseWindow();
         }
@@ -53,8 +61,8 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
             DrawTexture(texture2, 0, 0, WHITE);
             Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
             Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
-            DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
-            DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
+            DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) ? SKYBLUE : WHITE);
+            DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) ? SKYBLUE : WHITE);
             if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *communiste = true;
                 mainJeu();
@@ -81,6 +89,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
             DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
             DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *jouer = true;
+                *charger = false;
             }
             if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *quitter = true;
@@ -508,6 +517,7 @@ void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]
         }
     }
 }
+
 
 void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     for (int i = -1; i < 2; i++) {
