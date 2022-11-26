@@ -383,7 +383,6 @@ void mainJeu() {
             //info = !info;
         }
         info = true;
-
         if (info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
             plateau[souris1.caseY][souris1.caseX].etat == 8) {//eau
 //DrawRectangleLines(1200,400,250,130,WHITE);
@@ -407,18 +406,20 @@ void mainJeu() {
                          WHITE);
             }
         }
-        if (info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].etat == 2) {
+
+        if (info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].batiment >= 100) {
 //DrawRectangleLines(1200,400,700,200,WHITE);
-            for (int i = 0; i < nbMaisons; i++) {
-                DrawText(TextFormat("Maison numéro %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
-                DrawText(TextFormat("Habitants : %d", maison1[i].nbHabitants), 1210 + i * 300, 440, 20, WHITE);
-                DrawText(TextFormat("Eau : %d", maison1[i].eau), 1210 + i * 300, 470, 20, WHITE);
-                DrawText(TextFormat("Electricité : %d", maison1[i].electricite), 1210 + i * 300, 500, 20,
+
+            //for (int i = 0; i < nbMaisons; i++) {
+                DrawText(TextFormat("Maison numéro %d", plateau[souris1.caseY][souris1.caseX].batiment -  100 + 1), 1210, 410, 20, WHITE);
+                DrawText(TextFormat("Habitants : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].nbHabitants), 1210, 440, 20, WHITE);
+                DrawText(TextFormat("Eau : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eau), 1210* 300, 470, 20, WHITE);
+                DrawText(TextFormat("Electricité : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].electricite), 1210, 500, 20,
                          WHITE);
-                DrawText(TextFormat("Eau nécessaire : %d", maison1[i].eauNecessaire), 1210 + i * 300, 530, 20, WHITE);
-                DrawText(TextFormat("Electricité nécessaire : %d", maison1[i].electriciteNecessaire), 1210 + i * 300,
+                DrawText(TextFormat("Eau nécessaire : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eauNecessaire), 1210, 530, 20, WHITE);
+                DrawText(TextFormat("Electricité nécessaire : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].electriciteNecessaire), 1210,
                          560, 20, WHITE);
-            }
+            //}
         }
 
         DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
