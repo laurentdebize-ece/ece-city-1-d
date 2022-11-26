@@ -345,6 +345,7 @@ void mainJeu() {
                 if (souris1.interieurPlateau && monde == 0) {
                     plateau[souris1.caseY][souris1.caseX].etat = 1;
                     plateau[souris1.caseY][souris1.caseX].batiment = 0;
+                    monnaie -= 10;
                 }
             }
         } else if (IsKeyPressed(KEY_SPACE)) {
