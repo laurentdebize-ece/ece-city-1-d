@@ -118,7 +118,7 @@ void miseajourtimer(Maison maisons1[100], int nbMaisons);
 
 
 void initialiserbatiment(Maison maison);
-void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *capa_elec, int* habitant);
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *capa_elec, int *habitant, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int nbChateaux);
 void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int* capa_elec, int * capa_eau);
 
 void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec);
@@ -126,6 +126,5 @@ int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, in
 void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons);
 void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
 void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],int compteurDistance);
-void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
-                                    int nbChateauEau, Maison maisons[100], int compteurMaisonsTrouve);
+void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y, int nbChateauEau, Maison maison1[100]);
 #endif //BAC_A_SABLE_1_D_JEU_H

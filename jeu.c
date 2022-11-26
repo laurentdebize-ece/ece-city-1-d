@@ -61,8 +61,10 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
             DrawTexture(texture2, 0, 0, WHITE);
             Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
             Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
-            DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) ? SKYBLUE : WHITE);
-            DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) ? SKYBLUE : WHITE);
+            DrawRectangleLinesEx(rec_COMMUNISTE, 4,
+                                 CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) ? SKYBLUE : WHITE);
+            DrawRectangleLinesEx(rec_CAPITALISTE, 4,
+                                 CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) ? SKYBLUE : WHITE);
             if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *communiste = true;
                 mainJeu();
@@ -80,21 +82,23 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
 
             }
         }
-        if( *quitter2 == true){
+        if (*quitter2 == true) {
             DrawTexture(texture, 0, 0, WHITE);
             Rectangle rec_CREDIT = {748, 108, 238, 92};
             Rectangle rec_JOUER = {1038, 108, 238, 92};
             Rectangle rec_QUITTER = {1328, 108, 238, 92};
             DrawRectangleLinesEx(rec_CREDIT, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : GREEN);
             DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
-            DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);
+            if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *jouer = true;
                 *charger = false;
             }
             if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *quitter = true;
 
-            } if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            }
+            if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 *credits = true;
             }
 
@@ -105,12 +109,15 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
                 DrawTexture(texture2, 0, 0, WHITE);
                 Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
                 Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
-                DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
-                DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
+                DrawRectangleLinesEx(rec_COMMUNISTE, 4,
+                                     CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
+                DrawRectangleLinesEx(rec_CAPITALISTE, 4,
+                                     CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
                 if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     *communiste = true;
                     mainJeu();
-                } else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                } else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) &&
+                           IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                     *capitaliste = true;
                     mainJeu();
                 }
@@ -156,7 +163,7 @@ void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     fclose(ifs);
 }
 
-void resetTimer(float *timer, int* monnaie, int habitant, int impots) {
+void resetTimer(float *timer, int *monnaie, int habitant, int impots) {
     if (*timer <= 0) {
         *timer = 15;
         *monnaie += habitant * (impots);
@@ -188,6 +195,7 @@ void chercherCaseDeLaSourie(int x, int y, int *caseX, int *caseY, bool *dansPlat
     }
 
 }
+
 void initialiserPlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
         for (int j = 0; j < NB_CASE_LARGEUR; j++) {
@@ -204,7 +212,7 @@ void initialiserPlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
                 plateau[i][j].x = plateau[i - 1][j].x;
                 plateau[i][j].y = plateau[i - 1][j].y + LARGEUR_CASE;
             }
-            plateau[i][j].verification=0;
+            plateau[i][j].verification = 0;
         }
     }
 }
@@ -217,12 +225,12 @@ void dessinerSourieCurseur(souris souris1) {
 void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     Image terrain_vague;
     terrain_vague = LoadImage("../batiments/fond_map.png");
-    ImageResize(&terrain_vague,20,20);
-    Texture2D  texture6 = LoadTextureFromImage(terrain_vague);
+    ImageResize(&terrain_vague, 20, 20);
+    Texture2D texture6 = LoadTextureFromImage(terrain_vague);
     for (int i = 0; i < 35; i++) {
         for (int j = 0; j < 45; j++) {
             if (plateau[i][j].etat == 0) {
-                DrawTexture(texture6,plateau[i][j].x,plateau[i][j].y,WHITE);
+                DrawTexture(texture6, plateau[i][j].x, plateau[i][j].y, WHITE);
                 //DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20,20,GREEN);
                 DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, BLACK);
             }
@@ -257,23 +265,31 @@ void dessinerVariables(Rectangle rec_monnaie, Rectangle rec_habitant, Rectangle 
 void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_cabane, Rectangle rec_routes_reset,
                                     Rectangle rec_construire_centrale, Rectangle rec_construire_chateau_d_eau,
                                     Rectangle rec_construire_route) {
-    DrawRectangleLinesEx(rec_construire_cabane, 5, CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
+    DrawRectangleLinesEx(rec_construire_cabane, 5,
+                         CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
     DrawText(TextFormat("Cabane"), 30, 920, 50, CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
 
-    DrawRectangleLinesEx(rec_routes_reset, 6, CheckCollisionPointRec(mouse_pos,rec_routes_reset) ? LIGHTGRAY : GRAY);
-    DrawText(TextFormat("reset route"), 1020, 387, 25, CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
+    DrawRectangleLinesEx(rec_routes_reset, 6, CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
+    DrawText(TextFormat("reset route"), 1020, 387, 25,
+             CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
 
-    DrawRectangleLinesEx(rec_construire_centrale, 5, CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
-    DrawText(TextFormat("Electricite"), 240, 920, 50, CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
+    DrawRectangleLinesEx(rec_construire_centrale, 5,
+                         CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
+    DrawText(TextFormat("Electricite"), 240, 920, 50,
+             CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
 
-    DrawRectangleLinesEx(rec_construire_chateau_d_eau, 5, CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
-    DrawText(TextFormat("Eau"), 535, 920, 50, CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
+    DrawRectangleLinesEx(rec_construire_chateau_d_eau, 5,
+                         CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
+    DrawText(TextFormat("Eau"), 535, 920, 50,
+             CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
 
-    DrawRectangleLinesEx(rec_construire_route, 5, CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
-    DrawText(TextFormat("Routes"),655,920,50, CheckCollisionPointRec(mouse_pos,rec_construire_route) ? LIGHTGRAY : GRAY);
+    DrawRectangleLinesEx(rec_construire_route, 5,
+                         CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
+    DrawText(TextFormat("Routes"), 655, 920, 50,
+             CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
 }
 
-void afficherEtatMonde(int monde, int afficher_message_reset_routes){
+void afficherEtatMonde(int monde, int afficher_message_reset_routes) {
     if (monde != 0) {
         DrawText(TextFormat("Si vous voulez retourner \nau routes veuillez appuyer \nsur 'ENTER'"), 1000, 327,
                  10, WHITE);
@@ -296,7 +312,7 @@ void dessinertout(float timer, souris souris1) {
     dessinerSourieCurseur(souris1);
 }
 
-void initialiserbatiment(Maison batiment){
+void initialiserbatiment(Maison batiment) {
 
     Image ruine;
     Image terrain_vague;
@@ -340,66 +356,74 @@ void initialiserbatiment(Maison batiment){
 //- Château d’eau : 100 000 ECE-flouz
 //- Route : 10 ECE-flouz par unité de grille
 
-void miseajourtimer(Maison maison1[100], int nbMaisons){
-    for(int i = 0; i < nbMaisons; i ++){
-        if(maison1[i].vivable)
+void miseajourtimer(Maison maison1[100], int nbMaisons) {
+    for (int i = 0; i < nbMaisons; i++) {
+        if (maison1[i].vivable)
             maison1[i].tempsDuPlacement += GetFrameTime();
+        if (maison1[i].eau < maison1[i].eauNecessaire)
+            maison1[i].tempsDuPlacement = 0;
     }
 }
 
-void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *capa_elec, int *habitant) {
-    for(int i = 0; i < nbMaisons; i ++) {
-        if (maison1[i].tempsDuPlacement > 15) { // Terrain vague : 1000 ECE-flouz
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *capa_elec, int *habitant,
+                       Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int nbChateaux) {
+    for (int i = 0; i < nbMaisons; i++) {
+        /*if (maison1[i].tempsDuPlacement > 15) { // Terrain vague : 1000 ECE-flouz
             maison1[i].evolution++;
             maison1[i].tempsDuPlacement = 0;
 
-
-
-
-            maison1[i].fileName = "../batiments/Terrain_Vague1.png";
-            maison1[i].nbHabitants = 0;
-        }
+        }*/
         if (maison1[i].tempsDuPlacement < 15) { // Terrain vague : 1000 ECE-flouz
             maison1[i].evolution = 0;
             maison1[i].fileName = "../batiments/Terrain_Vague1.png";
             maison1[i].nbHabitants = 0;
+            maison1[i].electriciteNecessaire = 0;
+            maison1[i].eauNecessaire = 0;
         }
-        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 15 + GetFrameTime()){
+        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 15 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
             maison1[i].evolution = 1;
             maison1[i].fileName = "../batiments/Cabane.png";
             maison1[i].nbHabitants = 10;
             maison1[i].electriciteNecessaire = 10;
             maison1[i].eauNecessaire = 10;
+            rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+
             *habitant += 10;
             *capa_elec -= 10;
             *capa_eau -= 10;
         }
-        if (maison1[i].tempsDuPlacement >= 30 && maison1[i]. tempsDuPlacement < 30 + GetFrameTime()){
+        if (maison1[i].tempsDuPlacement >= 30 && maison1[i].tempsDuPlacement < 30 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
             maison1[i].evolution = 2;
             maison1[i].fileName = "../batiments/Maison.png";
             maison1[i].nbHabitants = 50;
             maison1[i].electriciteNecessaire = 50;
             maison1[i].eauNecessaire = 50;
+            rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+
             *habitant += 40;
             *capa_elec -= 40;
             *capa_eau -= 40;
         }
-        if (maison1[i].tempsDuPlacement >= 45 && maison1[i].tempsDuPlacement < 45 + GetFrameTime()){
+        if (maison1[i].tempsDuPlacement >= 45 && maison1[i].tempsDuPlacement < 45 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
             maison1[i].evolution = 3;
             maison1[i].fileName = "../batiments/Immeuble.png";
             maison1[i].nbHabitants = 100;
             maison1[i].electriciteNecessaire = 100;
             maison1[i].eauNecessaire = 100;
+            rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+
             *habitant += 50;
             *capa_elec -= 50;
             *capa_eau -= 50;
         }
-        if(maison1[i].tempsDuPlacement >= 60 && maison1[i].tempsDuPlacement < 60 + GetFrameTime()){
+        if (maison1[i].tempsDuPlacement >= 60 && maison1[i].tempsDuPlacement < 60 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
             maison1[i].evolution = 4;
             maison1[i].fileName = "../batiments/Gratte_ciel.png";
             maison1[i].nbHabitants = 1000;
             maison1[i].electriciteNecessaire = 1000;
             maison1[i].eauNecessaire = 1000;
+            rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+
             *habitant += 900;
             *capa_elec -= 900;
             *capa_eau -= 900;
@@ -411,8 +435,9 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *c
      }*/
 
 }
-void regressionbatiment(Maison maison1[100], int nbMaisons, int* habitant, int* capa_elec, int* capa_eau) {
-    for(int i = 0; i < nbMaisons; i ++) {
+
+void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int *capa_elec, int *capa_eau) {
+    for (int i = 0; i < nbMaisons; i++) {
         if (maison1[i].evolution == 4 && (maison1[i].eau <= 1000 || maison1[i].electricite <= 1000)) {
             maison1[i].evolution = 3;
             maison1[i].nbHabitants = 100;
@@ -452,8 +477,9 @@ void regressionbatiment(Maison maison1[100], int nbMaisons, int* habitant, int* 
 }
 
 
-void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec){
-    if(!(*connecteEau) || !(*connecteElec)){
+void
+rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool *connecteEau, bool *connecteElec) {
+    if (!(*connecteEau) || !(*connecteElec)) {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 // recherche de central
@@ -481,15 +507,15 @@ void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int
     }
 }
 
-int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y){
+int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y) {
     bool connecteEau = false;
     bool connecteElec = false;
     int compteur = 0;
     for (int i = -1; i < 4; i++) {
         for (int j = -1; j < 4; j++) {
-            if (compteur!=0 && compteur != 4 && compteur !=20 && compteur !=24){
-                if(plateau[i+y][j+x].etat==1){
-                    rechercheCentral(plateau, j+x, i+y, &connecteEau, &connecteElec);
+            if (compteur != 0 && compteur != 4 && compteur != 20 && compteur != 24) {
+                if (plateau[i + y][j + x].etat == 1) {
+                    rechercheCentral(plateau, j + x, i + y, &connecteEau, &connecteElec);
                 }
             }
             compteur++;
@@ -502,16 +528,16 @@ int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, in
                 plateau[i][j].etat = 1;
         }
     }
-    if(connecteElec && connecteEau)
+    if (connecteElec && connecteEau)
         return 1;
     else
         return 0;
 }
 
 
-void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons){
+void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons) {
     for (int i = 0; i < nbMaisons; i++) {
-        if (maison1[i].vivable == 0){
+        if (maison1[i].vivable == 0) {
             maison1[i].vivable = verificationViable(plateau, maison1[i].numCaseX, maison1[i].numCaseY);
             //DrawRectangle(maison1[i].numCaseX * 20 + 20, maison1[i].numCaseY * 20 + 20, 20,20,GREEN);
         }
@@ -522,44 +548,52 @@ void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]
 void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
-            if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment >= 100) {
-                plateau[y + i][x + j].etat = 34;
-                *numMaison = plateau[y + i][x + j].batiment - 100;
-                //return;
-            }
-            if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment < 100) {
-                plateau[y + i][x + j].etat = 33;
-                rechercheMaison(numMaison, maison, x + j, y + j, plateau);
+            if (*numMaison == -1) {
+                if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment >= 100) {
+                    *numMaison = plateau[y + i][x + j].batiment - 100;
+                    for (int k = 0; k < 3; k++) {
+                        for (int l = 0; l < 3; l++) {
+                            plateau[y + i + k][x + j + l].etat = 34;
+                        }
+                    }
+                }
+                if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment < 100) {
+                    plateau[y + i][x + j].etat = 33;
+                    rechercheMaison(numMaison, maison, x + j, y + j, plateau);
+                }
             }
         }
     }
 }
 
 
-
-void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],int compteurDistance) {
+void
+analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],
+                   int compteurDistance) {
     int numMaisonTrouve = -1;
 
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i != j && i != -j) {
-                if (plateau[y + i][x + j].etat == 1) {
-                    plateau[y + i][x + j].etat = 22;
-                    analyseChateauxEau(plateau, chateaux, x + j, y + i, maisons, compteurDistance+1);
-                }
                 if (plateau[y + i][x + j].etat == 2) {
                     rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, plateau);
                     if (numMaisonTrouve != -1) {
-                        plateau[numMaisonTrouve + 5][0].etat = 36;  // test
+                        //plateau[numMaisonTrouve + 5][0].etat = 36;  // test
                         // maisons[numMaisonTrouve].distanceChateau = compteurDistance;
                         chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].numMaison = numMaisonTrouve;
                         chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].distance = compteurDistance;
-                        chateaux->nbMaisonAlim ++;
+                        chateaux->nbMaisonAlim += 1;
+                        numMaisonTrouve = -1;
                         //chateaux->tabMaisonAlim[0].numMaison = 2;
-                        plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
+                        //plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
                     }
                     //chateaux.capaciteutilise += maison[numMaisonTrouve].eauNecessaire;
                 }
+                if (plateau[y + i][x + j].etat == 1) {
+                    plateau[y + i][x + j].etat = 22;
+                    analyseChateauxEau(plateau, chateaux, x + j, y + i, maisons, compteurDistance + 1);
+                }
+
             }
         }
     }
@@ -568,10 +602,10 @@ void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central 
 
 
 void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
-                                    int nbChateauEau, Maison maison1[100], int compteurMaisonsTrouve) {
+                                    int nbChateauEau, Maison maison1[100]) {
 
     //int compteurMaisonsTrouve = 0;
-    chateaux[0].tabMaisonAlim[0].numMaison = -1;
+    //chateaux[0].tabMaisonAlim[0].numMaison = -1;
 
     for (int nb = 0; nb < nbChateauEau; nb++) {
         x = chateaux[nb].numCaseX;
@@ -584,8 +618,8 @@ void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEU
                     (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {
                     //DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
                     analyseChateauxEau(plateau, &chateaux[nb], x + i, y + j, maison1, 1);
-                    DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
-                    compteurMaisonsTrouve=0;
+                    //DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
+                    //compteurMaisonsTrouve=0;
                 }
             }
         }
@@ -609,21 +643,42 @@ void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEU
         }
     }
 
-
+    int compteur = 0;
+    int sauvNumMaison = -1;
     for (int i = 0; i < nbChateauEau; i++) {
-        for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {
-            if (chateaux[i].tabMaisonAlim[j].distance<=PPdistance && chateaux[i].tabMaisonAlim[j].verification == 0){
-                numMaisonPlusProche = chateaux[i].tabMaisonAlim[j].numMaison;
+        while (compteur != chateaux[i].nbMaisonAlim) {
+
+            for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {
+                if (/*chateaux[i].tabMaisonAlim[j].distance < PPdistance && */
+                        chateaux[i].tabMaisonAlim[j].verification ==
+                        0) {
+                    if (chateaux[i].tabMaisonAlim[j].distance < PPdistance) {
+                        PPdistance = chateaux[i].tabMaisonAlim[j].distance;
+                        numMaisonPlusProche = chateaux[i].tabMaisonAlim[j].numMaison;
+                        sauvNumMaison = j;
+                        //chateaux[i].tabMaisonAlim[j].verification = 1;
+                    }
+                }
             }
-        }
-        if (numMaisonPlusProche!=-1) {
-            if ((chateaux[i].capaciteMax - chateaux[i].capaciteutilise) >= maison1[numMaisonPlusProche].eauNecessaire) {
-                chateaux[i].capaciteutilise += maison1[numMaisonPlusProche].eauNecessaire;
-                maison1[numMaisonPlusProche].eau = maison1[numMaisonPlusProche].eauNecessaire;
-                plateau[maison1[numMaisonPlusProche].numCaseY][maison1[numMaisonPlusProche].numCaseX].etat = 77;    // test
+            PPdistance = 9999;
+            chateaux[i].tabMaisonAlim[sauvNumMaison].verification = 1;
+
+            if (numMaisonPlusProche != -1) {
+                if ((chateaux[i].capaciteMax - chateaux[i].capaciteutilise) >=
+                    maison1[numMaisonPlusProche].eauNecessaire - maison1[numMaisonPlusProche].eau) {
+                    chateaux[i].capaciteutilise += (maison1[numMaisonPlusProche].eauNecessaire -
+                                                    maison1[numMaisonPlusProche].eau);
+                    maison1[numMaisonPlusProche].eau = maison1[numMaisonPlusProche].eauNecessaire;
+                    //plateau[maison1[numMaisonPlusProche].numCaseY][maison1[numMaisonPlusProche].numCaseX].etat = 77;    // test
+                }
             }
+            for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {
+                if (chateaux[i].tabMaisonAlim[j].verification)
+                    compteur++;
+            }
+            if (compteur != chateaux[i].nbMaisonAlim)
+                compteur = 0;
         }
     }
-
-
 }
+
