@@ -6,8 +6,13 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
     Image mode;
     Image credit;
     InitWindow(1024, 768, "ECE city");
+    InitAudioDevice();
+    //Music musique1 = LoadMusicStream("../Musiques/the-simpsons-theme-song.mp3");
+    //Music musique2 = LoadMusicStream("../Musiques/URSS.mp3");
+    //Music musique3 = LoadMusicStream("../Musiques/usa.mp3");
     SetWindowPosition(50, 50);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
+    //PlayMusicStream(musique1);
     SetTargetFPS(60);
     MaximizeWindow();
     menu = LoadImage("../menu/menu2.png");
@@ -26,6 +31,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
     UnloadImage(menu);
     UnloadImage(credit);
     while (!WindowShouldClose()) {
+        //UpdateMusicStream(musique1);
         Vector2 mouse_pos = GetMousePosition();
         BeginDrawing();
         DrawTexture(texture, 0, 0, WHITE);
@@ -61,16 +67,35 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
             DrawTexture(texture2, 0, 0, WHITE);
             Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
             Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
-            DrawRectangleLinesEx(rec_COMMUNISTE, 4,
-                                 CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) ? SKYBLUE : WHITE);
-            DrawRectangleLinesEx(rec_CAPITALISTE, 4,
-                                 CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) ? SKYBLUE : WHITE);
-            if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                *communiste = true;
-                mainJeu();
-            } else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                *capitaliste = true;
-                mainJeu();
+            DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
+            DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
+            if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE)){
+                //PauseMusicStream(musique1);
+                //UpdateMusicStream(musique1);
+                //PlayMusicStream(musique2);
+                //UpdateMusicStream(musique2);
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                    *communiste = true;
+                    mainJeu();
+                }
+            }
+            else if (CheckCollisionPointRec(mouse_pos, rec_CAPITALISTE) ){
+                //PauseMusicStream(musique1);
+                //UpdateMusicStream(musique1);
+                //PlayMusicStream(musique3);
+                //UpdateMusicStream(musique3);
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                        *capitaliste = true;
+                    mainJeu();
+                }
+            }
+            else {
+                //StopMusicStream(musique2);
+                //StopMusicStream(musique3);
+                //UpdateMusicStream(musique2);
+                //UpdateMusicStream(musique3);
+                //ResumeMusicStream(musique1);
+                //UpdateMusicStream(musique1);
             }
         }
         if (*credits == true) {
@@ -291,7 +316,7 @@ void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_
 
 void afficherEtatMonde(int monde, int afficher_message_reset_routes) {
     if (monde != 0) {
-        DrawText(TextFormat("Si vous voulez retourner \nau routes veuillez appuyer \nsur 'ENTER'"), 1000, 327,
+        DrawText(TextFormat("Si vous voulez retourner \nau routes veuillez appuyer \nsur 'ENTER' et '0'"), 1000, 327,
                  10, WHITE);
     }
     if (monde == 1) {

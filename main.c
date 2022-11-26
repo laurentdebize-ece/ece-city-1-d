@@ -19,7 +19,7 @@ enum {
     centrale = 2,
     chateau = 3,
     route = 4
-} veut_construire;
+}veut_construire;
 
 int communiste;
 int capitaliste;
@@ -81,7 +81,7 @@ void mainJeu() {
     Image centrale;
     Image chateau_d_eau;
     Image fond_map;
-
+    //Music musique4 = LoadMusicStream("../Musiques/musique_plateau.mp3");
 
     terrain_vague = LoadImage("../batiments/Terrain_Vague1.png");
     centrale = LoadImage("../batiments/Centrale_electrique_2.png");
@@ -100,7 +100,7 @@ void mainJeu() {
 
 
     initialiserPlateau(plateau);
-
+    //PlayMusicStream(musique4);
     for (int i = 0; i < 100; ++i) {
         //maison1[i].fileName = "../batiments/Terrain_Vague1.png";
         maison1[i].nbHabitants = 0;
@@ -123,7 +123,7 @@ void mainJeu() {
 
     while (!WindowShouldClose()) {
 
-
+        //UpdateMusicStream(musique4);
         Vector2 mouse_pos = GetMousePosition();
 
 
@@ -145,8 +145,7 @@ void mainJeu() {
             for (int j = 0; j < 45; j++) {
 
                 if (plateau[i][j].etat == 1) {
-                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20,
-                                  monde == 2 ? BLUE : monde == 1 ? YELLOW : GRAY);
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20,monde == 2 ? BLUE : monde == 1 ? YELLOW : GRAY);
                     DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, BLACK); // creation des routes
                     if (reset_routes == true && monde == 0 && plateau[souris1.caseY][souris1.caseX].etat != 2 &&
                         plateau[souris1.caseY][souris1.caseX].etat != 7 &&
@@ -195,8 +194,16 @@ void mainJeu() {
                 }
             }
         }
+        if (IsKeyPressed(KEY_ZERO )){
+            monde = 0;
+        }
+        if (IsKeyPressed(KEY_ONE)){
+            monde = 1;
+        }
+        if (IsKeyPressed(KEY_TWO)){
+            monde = 2;
+        }
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-
 
             if (CheckCollisionPointRec(mouse_pos, rec_routes_reset)) {
                 afficher_message_reset_routes = !afficher_message_reset_routes;
@@ -208,7 +215,7 @@ void mainJeu() {
                 monde = 2;
             }
         }
-        if (IsKeyPressed(KEY_ENTER)) {
+        if (IsKeyPressed(KEY_ZERO) || IsKeyPressed(KEY_ENTER)) {
             monde = 0;
         }
         if (IsKeyDown(KEY_BACKSPACE)) {
