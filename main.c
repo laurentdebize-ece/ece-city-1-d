@@ -58,7 +58,7 @@ int construire_routes;
 
 
 void mainJeu() {
-    SetTargetFPS(30);
+    SetTargetFPS(20);
     Rectangle rec_yellow = {1000, 100, 180, 60};
     Rectangle rec_blue = {1000, 170, 180, 60};
     Rectangle rec_monnaie = {1660, 15, 240, 30};
@@ -87,10 +87,23 @@ void mainJeu() {
     centrale = LoadImage("../batiments/Centrale_electrique_2.png");
     chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
 
+    ruine = LoadImage("../batiments/Ruine.png");
+    cabane = LoadImage("../batiments/Cabane.png");
+    maison = LoadImage("../batiments/Maison.png");
+    immeuble = LoadImage("../batiments/Immeuble.png");
+    gratte_ciel = LoadImage("../batiments/Gratte_ciel.png");
+
+
+
 
     Texture2D texture4 = LoadTextureFromImage(centrale);
     Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
     Texture2D texture6 = LoadTextureFromImage(terrain_vague);
+
+    Texture2D texture3 = LoadTextureFromImage(cabane);
+    Texture2D texture8 = LoadTextureFromImage(maison);
+    Texture2D texture9 = LoadTextureFromImage(immeuble);
+    Texture2D texture10 = LoadTextureFromImage(gratte_ciel);
 
     //ImageResize(&terrain_vague, 60, 60);
 
@@ -114,9 +127,12 @@ void mainJeu() {
 
     for (int i = 0; i < 20; i++) {
         chateaux[i].capaciteMax = 5000;
+        electricite[i].capaciteMax = 5000;
         chateaux[i].capaciteutilise = 0;
+        electricite[i].capaciteutilise = 0;
         for (int j = 0; j < 20; j++) {
             chateaux[i].tabMaisonAlim[j].numMaison = -1;
+            electricite[i].tabMaisonAlim[j].numMaison = -1;
         }
     }
 
@@ -166,15 +182,18 @@ void mainJeu() {
                         plateau[i][j].etat = 1;
                         //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux); // ici
                         verificationMaisonNonViables(plateau, maison1, nbMaisons);
+                        //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
                         //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1, compteurMaisonsTrouve);
+                        //rechercheRouteConnecteCentral(plateau, electricite, 0, 0, nbChateaux, maison1);
                     }
                 }
 
                 if ((plateau[i][j].batiment >= 100 && monde == 0)) {
                     //DrawTexture(texture3,j * 20 + 20 ,i * 20 + 20,WHITE);
-                    DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),
-                                j * 20 + 20, i * 20 + 20, WHITE);
+                    DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),j * 20 + 20, i * 20 + 20, WHITE);
+                    //DrawTexture(texture6, j * 20 + 20, i * 20 + 20, WHITE);
                 }
+
                 for (int k = 0; k < nbMaisons; k++) {
                     if (maison1[k].vivable == 0) {
                         //DrawRectangle(maison1[k].numCaseX * 20 + 20, maison1[k].numCaseY * 20 + 20, 20, 20, BLACK);
@@ -189,9 +208,11 @@ void mainJeu() {
                 }
                 if (plateau[i][j].batiment == 7 && (monde == 0 || monde == 1)) {
                     DrawTexture(texture4, j * 20 + 20, i * 20 + 20, WHITE);
+                    //plateau[i][j].batiment = 0;
                 }
                 if (plateau[i][j].batiment == 8 && (monde == 0 || monde == 2)) {
                     DrawTexture(texture5, j * 20 + 20, i * 20 + 20, WHITE);
+                    //plateau[i][j].batiment = 0;
                 } else {
 
                 }
@@ -283,6 +304,7 @@ void mainJeu() {
                                                                     souris1.caseY); //renvoie 1 si viabilité ok
                     maison1[nbMaisons].tempsDuPlacement = 0;
                     nbMaisons++;
+                    //(plateau, chateaux, 0, 0, nbChateaux, maison1);
                     //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);             // ici
                     monnaie -= 1000;
                 }
@@ -307,6 +329,8 @@ void mainJeu() {
                             plateau[souris1.caseY + j][souris1.caseX + i].etat = 7;
                         }
                     }
+                    electricite[nbCentrales].numCaseX = souris1.caseX;
+                    electricite[nbCentrales].numCaseY = souris1.caseY;
                     capa_elec += 5000;
                     monnaie -= 100000;
                     nbCentrales++;
@@ -337,6 +361,7 @@ void mainJeu() {
                     monnaie -= 100000;
                     capa_eau += 5000;
                     nbChateaux++;
+                    //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
                 }
             }
         } else if (veut_construire == 4) {
@@ -355,8 +380,10 @@ void mainJeu() {
             }
         } else if (IsKeyPressed(KEY_SPACE)) {
             veut_construire = nulle;
-            info = !info;
+            //info = !info;
         }
+        info = true;
+
         if (info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
             plateau[souris1.caseY][souris1.caseX].etat == 8) {//eau
 //DrawRectangleLines(1200,400,250,130,WHITE);
@@ -414,7 +441,7 @@ void mainJeu() {
 
         //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);
         miseajourtimer(maison1, nbMaisons);
-        evolutionbatiment(maison1, nbMaisons, &capa_eau, &capa_elec, &habitant, plateau, chateaux, nbChateaux);
+        evolutionbatiment(maison1, nbMaisons, &capa_eau, &capa_elec, &habitant, plateau, chateaux, nbChateaux, electricite);
         // regressionbatiment(maison1,nbMaisons,&habitant,&capa_eau,&capa_elec);
         /*for(int i = 0 ; i < nbMaisons ; i ++) {
             if(maison1[i].vivable) {
@@ -430,12 +457,16 @@ void mainJeu() {
         DrawText(TextFormat("%.0f", maison1[1].tempsDuPlacement), 1100, 650, 30, WHITE);
         dessinertout(timer, souris1);
         EndDrawing();
+
+
     }
     sauvegarde("../sauvgarde.txt", plateau);
+
 }
 
 int main() {
     mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste, &quitter2, &charger);
+    mainJeu();
 
     return 0;
 }

@@ -12,7 +12,6 @@
 #define LARGEUR_CASE 20
 
 
-
 typedef struct {
     int x, y;
     int largeur;
@@ -34,7 +33,7 @@ typedef struct {
 } Gen;
 
 typedef struct {
-    char* fileName;
+    char *fileName;
     int numCaseX, numCaseY;
     float tempsDuPlacement;
     int nbHabitants;
@@ -45,8 +44,7 @@ typedef struct {
     int prix;
     int distanceChateau;
     int distanceCentral;
-}Maison;
-
+} Maison;
 
 
 typedef struct {
@@ -54,10 +52,10 @@ typedef struct {
     int ressourcesAlim;
     int distance;
     int verification;
-}MaisonAlim;
+} MaisonAlim;
 
 typedef struct {
-    char* fileName;
+    char *fileName;
     int numCaseX, numCaseY;
     int ressource;
     int capaciteMax;
@@ -65,10 +63,7 @@ typedef struct {
     int nbMaisonAlim;
     MaisonAlim tabMaisonAlim[20];
     int prix;
-}Central;
-
-
-
+} Central;
 
 
 /////////////////////////////// Main ////////////////////////////////////////////
@@ -77,7 +72,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
 void mainJeu();
 
 ////////////////////////////// Timer ///////////////////////////////////////////////
-void resetTimer(float *timer, int*monnaie, int habitant, int impots);
+void resetTimer(float *timer, int *monnaie, int habitant, int impots);
 
 ////////////////////////////// Initialisation /////////////////////////////////////////
 void initialiserPlateau(Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
@@ -112,19 +107,34 @@ void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_
 
 void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 
-void dessinertout(float timer,souris souris1);
+void dessinertout(float timer, souris souris1);
 
 void miseajourtimer(Maison maisons1[100], int nbMaisons);
 
 
 void initialiserbatiment(Maison maison);
-void evolutionbatiment(Maison maison1[100], int nbMaisons, int* capa_eau, int *capa_elec, int *habitant, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int nbChateaux);
-void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int* capa_elec, int * capa_eau);
 
-void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool* connecteEau, bool* connecteElec);
+void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *capa_elec, int *habitant, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int nbChateaux, Central electricite[20]);
+
+void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int *capa_elec, int *capa_eau);
+
+void rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool *connecteEau, bool *connecteElec);
+
 int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y);
+
 void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons);
+
 void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
-void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],int compteurDistance);
-void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y, int nbChateauEau, Maison maison1[100]);
+
+void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],
+                   int compteurDistance);
+
+void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
+                                    int nbChateauEau, Maison maison1[100]);
+
+void analyseCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *central, int x, int y, Maison maisons[100],int compteurDistance);
+
+void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central central[20], int x, int y,
+                                   int nbChateauEau, Maison maison1[100]);
+
 #endif //BAC_A_SABLE_1_D_JEU_H
