@@ -3,25 +3,25 @@
 int reset_routes;
 int afficher_message_reset_routes;
 
-int monnaie = 500000;
+int monnaie = 500000;//initialisation de la monnaie, des habitants, des impôts ainsi que des capacités en eau et électricités dont nous disposons au début de partie
 int habitant = 0;
 int capa_elec = 0;
 int capa_eau = 0;
 int impots = 10;
-enum {
+enum {//permet de changer de niveau
     rien = 0,
     elec = 1,
     eau = 2
 } monde;
-enum {
+enum {//permet de savoir quelle type de construction le joueur veut construire
     nulle = 0,
     cabane = 1,
     centrale = 2,
     chateau = 3,
     route = 4
-}veut_construire;
+} veut_construire;
 
-int communiste;
+int communiste;//boutons sur lesquels le joueur peut cliquer s'il se trouve sur le menu
 int capitaliste;
 int jouer;
 int quitter;
@@ -29,30 +29,26 @@ int quitter2;
 int charger;
 int credits;
 float timer = 5;
-int monde_eau;
-int monde_elec;
-int nbMaisons = 0;
+
+int nbMaisons = 0;//comptent le nombre de maisons de centrales ou de châteaux d'eau posés sur la map
 int nbCentrales = 0;
 int nbChateaux = 0;
-int verificationConstructionMaison = 0;
-bool veutConstruireCabane = false;
+int verificationConstructionMaison = 0;//variables vérifiants si l'on peut construire sur la case du plateau sélectionnée ou non
 int verificationConstructionCentral = 0;
-bool veutConstruireCentral = false;
 int verificationConstructionChateau = 0;
-bool veutConstruireChateau = false;
 int verificationConstructionRoutes = 0;
-bool info = true;
+bool info = true;//variable concernant l'affichage des informations sur les  différents batiments
 int numeroMaisonConnecteChateau = -1;
 int compteurMaisonsTrouve = -1;
 
-Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];
+Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR];//initialisation du plateau ainsi que de 3 tableaux stockant les maisons, château d'eau et centrales
 Central chateaux[20];
 Central electricite[20];
 Maison maison1[100];
 souris souris1;
 
 
-int reset_routes;
+int reset_routes;//variables concernants la modification d'une route
 int afficher_message_reset_routes;
 int construire_routes;
 
@@ -72,7 +68,7 @@ void mainJeu() {
     Rectangle rec_routes_reset = {1000, 370, 180, 60};
     Rectangle aire_de_jeu = {20, 20, 45 * 20, 35 * 20};
 
-    Image ruine;
+    Image ruine;//initialisations des images
     Image terrain_vague;
     Image cabane;
     Image maison;
@@ -83,7 +79,8 @@ void mainJeu() {
     Image fond_map;
     //Music musique4 = LoadMusicStream("../Musiques/musique_plateau.mp3");
 
-    terrain_vague = LoadImage("../batiments/Terrain_Vague1.png");
+    terrain_vague = LoadImage(
+            "../batiments/Terrain_Vague1.png");//on les assigne ensuite chacune à une variable et on les recupere depuis le fichier "batiments"
     centrale = LoadImage("../batiments/Centrale_electrique_2.png");
     chateau_d_eau = LoadImage("../batiments/Chateau_d_eau.png");
 
@@ -94,9 +91,7 @@ void mainJeu() {
     gratte_ciel = LoadImage("../batiments/Gratte_ciel.png");
 
 
-
-
-    Texture2D texture4 = LoadTextureFromImage(centrale);
+    Texture2D texture4 = LoadTextureFromImage(centrale);//images prêtes à être afficher
     Texture2D texture5 = LoadTextureFromImage(chateau_d_eau);
     Texture2D texture6 = LoadTextureFromImage(terrain_vague);
 
@@ -120,7 +115,7 @@ void mainJeu() {
         maison1[i].evolution = 0;
     }
 
-    if (charger){
+    if (charger) {
         liresauv("../sauvgarde.txt", plateau);
         charger = false;
     }
@@ -140,28 +135,31 @@ void mainJeu() {
     while (!WindowShouldClose()) {
 
         //UpdateMusicStream(musique4);
-        Vector2 mouse_pos = GetMousePosition();
+        Vector2 mouse_pos = GetMousePosition();//récupération des coordonées de la souris en temps réel
 
 
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(BLACK);//fond d'écran noir
 
-        chercherCaseDeLaSourie(GetMouseX(), GetMouseY(), &souris1.caseX, &souris1.caseY, &souris1.interieurPlateau);
+        chercherCaseDeLaSourie(GetMouseX(), GetMouseY(), &souris1.caseX, &souris1.caseY,
+                               &souris1.interieurPlateau);//fonction récupérant les coordonées de la souris en temps réel
         dessinerSourieCurseur(souris1);
 
-        resetTimer(&timer, &monnaie, habitant, impots);
+        resetTimer(&timer, &monnaie, habitant,
+                   impots);//fonction qui réinitialise le timer à chaque cycle de vie de 15 secondes
 
         timer -= GetFrameTime();
         //evolutionbatiment(&maison1[100], nbMaisons, monnaie);
 
-        dessinerBasePlateau(plateau);
+        dessinerBasePlateau(plateau);//fonction qui dessine le plateau
 
 
         for (int i = 0; i < 35; i++) {
             for (int j = 0; j < 45; j++) {
 
                 if (plateau[i][j].etat == 1) {
-                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20,monde == 2 ? BLUE : monde == 1 ? YELLOW : GRAY);
+                    DrawRectangle(plateau[i][j].x, plateau[i][j].y, 20, 20,
+                                  monde == 2 ? BLUE : monde == 1 ? YELLOW : GRAY);
                     DrawRectangleLines(plateau[i][j].x, plateau[i][j].y, 20, 20, BLACK); // creation des routes
                     if (reset_routes == true && monde == 0 && plateau[souris1.caseY][souris1.caseX].etat != 2 &&
                         plateau[souris1.caseY][souris1.caseX].etat != 7 &&
@@ -190,7 +188,8 @@ void mainJeu() {
 
                 if ((plateau[i][j].batiment >= 100 && monde == 0)) {
                     //DrawTexture(texture3,j * 20 + 20 ,i * 20 + 20,WHITE);
-                    DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),j * 20 + 20, i * 20 + 20, WHITE);
+                    DrawTexture(LoadTextureFromImage(LoadImage(maison1[plateau[i][j].batiment - 100].fileName)),
+                                j * 20 + 20, i * 20 + 20, WHITE);
                     //DrawTexture(texture6, j * 20 + 20, i * 20 + 20, WHITE);
                 }
 
@@ -218,13 +217,13 @@ void mainJeu() {
                 }
             }
         }
-        if (IsKeyPressed(KEY_ZERO )){
+        if (IsKeyPressed(KEY_ZERO)) {
             monde = 0;
         }
-        if (IsKeyPressed(KEY_ONE)){
+        if (IsKeyPressed(KEY_ONE)) {
             monde = 1;
         }
-        if (IsKeyPressed(KEY_TWO)){
+        if (IsKeyPressed(KEY_TWO)) {
             monde = 2;
         }
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
@@ -371,7 +370,7 @@ void mainJeu() {
             }
             if (verificationConstructionRoutes == 0 && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && monnaie >= 10) {
                 if (souris1.interieurPlateau && monde == 0) {
-                    if (plateau[souris1.caseY][souris1.caseX].etat == 0){
+                    if (plateau[souris1.caseY][souris1.caseX].etat == 0) {
                         monnaie -= 10;
                     }
                     plateau[souris1.caseY][souris1.caseX].etat = 1;
@@ -407,42 +406,54 @@ void mainJeu() {
             }
         }
 
-        if (info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].batiment >= 100) {
+        if (info == true && IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
+            plateau[souris1.caseY][souris1.caseX].batiment >= 100) {
 //DrawRectangleLines(1200,400,700,200,WHITE);
 
             //for (int i = 0; i < nbMaisons; i++) {
-                DrawText(TextFormat("Maison numéro %d", plateau[souris1.caseY][souris1.caseX].batiment -  100 + 1), 1210, 410, 20, WHITE);
-                DrawText(TextFormat("Habitants : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].nbHabitants), 1210, 440, 20, WHITE);
-                DrawText(TextFormat("Eau : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eau), 1210* 300, 470, 20, WHITE);
-                DrawText(TextFormat("Electricité : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].electricite), 1210, 500, 20,
-                         WHITE);
-                DrawText(TextFormat("Eau nécessaire : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eauNecessaire), 1210, 530, 20, WHITE);
-                DrawText(TextFormat("Electricité nécessaire : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].electriciteNecessaire), 1210,
-                         560, 20, WHITE);
+            DrawText(TextFormat("Maison numéro %d", plateau[souris1.caseY][souris1.caseX].batiment - 100 + 1), 1210,
+                     410, 20, WHITE);
+            DrawText(TextFormat("Habitants : %d",
+                                maison1[plateau[souris1.caseY][souris1.caseX].batiment - 100].nbHabitants), 1210, 440,
+                     20, WHITE);
+            DrawText(TextFormat("Eau : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment - 100].eau),
+                     1210 * 300, 470, 20, WHITE);
+            DrawText(TextFormat("Electricité : %d",
+                                maison1[plateau[souris1.caseY][souris1.caseX].batiment - 100].electricite), 1210, 500,
+                     20,
+                     WHITE);
+            DrawText(TextFormat("Eau nécessaire : %d",
+                                maison1[plateau[souris1.caseY][souris1.caseX].batiment - 100].eauNecessaire), 1210, 530,
+                     20, WHITE);
+            DrawText(TextFormat("Electricité nécessaire : %d",
+                                maison1[plateau[souris1.caseY][souris1.caseX].batiment - 100].electriciteNecessaire),
+                     1210,
+                     560, 20, WHITE);
             //}
         }
 
         DrawText(TextFormat("CaseX :%d", souris1.caseX), 950, 50, 20, WHITE);
         DrawText(TextFormat("CaseY :%d", souris1.caseY), 950, 70, 20, WHITE);
 
-        if (timer <= 1) {
+        if (timer <= 1) {//informe le joueur d'un nouveau cycle
             DrawText(TextFormat("Nouveau Cycle"), 180, 280, 80, GREEN);
         }
 
         dessinerCasesEtages(rec_yellow, rec_blue, mouse_pos);
 
         dessinerVariables(rec_monnaie, rec_habitant, rec_capa_elec, rec_capa_eau, mouse_pos, monnaie, habitant,
-                          capa_elec, capa_eau);
+                          capa_elec, capa_eau);//dessine les rectangles initialisés plus haut
 
         dessinerCasesChoixConstruction(mouse_pos, rec_construire_cabane, rec_routes_reset,
                                        rec_construire_centrale, rec_construire_chateau_d_eau,
-                                       rec_construire_route);
+                                       rec_construire_route);//dessine les rectangles initialisés plus haut
 
-        afficherEtatMonde(monde, afficher_message_reset_routes);
+        afficherEtatMonde(monde, afficher_message_reset_routes);//fonction permettant de changer de niveau
 
         //rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0,nbChateaux);
         miseajourtimer(maison1, nbMaisons);
-        evolutionbatiment(maison1, nbMaisons, &capa_eau, &capa_elec, &habitant, plateau, chateaux, nbChateaux, electricite);
+        evolutionbatiment(maison1, nbMaisons, &capa_eau, &capa_elec, &habitant, plateau, chateaux, nbChateaux,
+                          electricite);//fonction permettant l'évolution des maisons
         // regressionbatiment(maison1,nbMaisons,&habitant,&capa_eau,&capa_elec);
         /*for(int i = 0 ; i < nbMaisons ; i ++) {
             if(maison1[i].vivable) {
@@ -466,7 +477,8 @@ void mainJeu() {
 }
 
 int main() {
-    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste, &quitter2, &charger);
+    mainMenu(&jouer, &quitter, &credits, &communiste, &capitaliste, &quitter2,
+             &charger);//main concernant l'ecran de menu
     mainJeu();
 
     return 0;
