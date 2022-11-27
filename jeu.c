@@ -520,17 +520,17 @@ void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int *
 
 
 void
-rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool *connecteEau, bool *connecteElec) {
-    if (!(*connecteEau) || !(*connecteElec)) {
-        for (int i = -1; i < 2; i++) {
+rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, bool *connecteEau, bool *connecteElec) { // Recherche un chateau d'eau et une centrale d'electricité
+    if (!(*connecteEau) || !(*connecteElec)) {  // 2 variables qui vont servir à savoir si on a trouvé les centrales
+        for (int i = -1; i < 2; i++) {  // on parcourt tt les cases autour de la case etudiée
             for (int j = -1; j < 2; j++) {
                 // recherche de central
-                if (!(i == j || i == -j)) {
+                if (!(i == j || i == -j)) { // on ignore les cases en diagonales
 
                     switch (plateau[y + i][x + j].etat) {
-                        case 1 : {
-                            plateau[y + i][x + j].etat = 22;
-                            rechercheCentral(plateau, x + j, y + i, connecteEau, connecteElec);
+                        case 1 : {  // si on trouve une route
+                            plateau[y + i][x + j].etat = 22;    // on change son etat pour car on la decouverte
+                            rechercheCentral(plateau, x + j, y + i, connecteEau, connecteElec); // on continue la recherche
                             break;
                         }
                         case 7 : {
@@ -539,6 +539,7 @@ rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, b
                             break;
                         }
                         case 8 : {
+                            // On a touvé un chateau d'eau
                             *connecteEau = true;
                             break;
                         }
@@ -549,57 +550,57 @@ rechercheCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y, b
     }
 }
 
-int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y) {
-    bool connecteEau = false;
+int verificationViable(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int x, int y) {  // fonction qui verifie si une maison est viable on non
+    bool connecteEau = false; // 2 variables qui vont servir à savoir si on a trouvé les centrales
     bool connecteElec = false;
-    int compteur = 0;
+    int compteur = 0;   // ce compteur va servir à ignorer les coins
     for (int i = -1; i < 4; i++) {
-        for (int j = -1; j < 4; j++) {
+        for (int j = -1; j < 4; j++) {  // on parcourt tout le tour du terrain
             if (compteur != 0 && compteur != 4 && compteur != 20 && compteur != 24) {
-                if (plateau[i + y][j + x].etat == 1) {
-                    rechercheCentral(plateau, j + x, i + y, &connecteEau, &connecteElec);
+                if (plateau[i + y][j + x].etat == 1) {  // si on trouve une route
+                    rechercheCentral(plateau, j + x, i + y, &connecteEau, &connecteElec);   // on cherche les centrales
                 }
             }
             compteur++;
         }
     }
 
-    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+    for (int i = 0; i < NB_CASE_HAUTEUR; i++) { // une fois la verification terminée on remet tt les routes à leurs etat d'origine
         for (int j = 0; j < NB_CASE_LARGEUR; j++) {
             if (plateau[i][j].etat == 22)
                 plateau[i][j].etat = 1;
         }
     }
-    if (connecteElec && connecteEau)
+    if (connecteElec && connecteEau)   // si on trouve les centrales on renvoit 1 sinon 0
         return 1;
     else
         return 0;
 }
 
 
-void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons) {
+void verificationMaisonNonViables(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Maison maison1[100], int nbMaisons) { // fonction qui verifie la viabilite des maisons non viable
     for (int i = 0; i < nbMaisons; i++) {
         if (maison1[i].vivable == 0) {
             maison1[i].vivable = verificationViable(plateau, maison1[i].numCaseX, maison1[i].numCaseY);
-            //DrawRectangle(maison1[i].numCaseX * 20 + 20, maison1[i].numCaseY * 20 + 20, 20,20,GREEN);
         }
     }
 }
 
 
-void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
+void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {    // programme qui sert a retrouver le numero d'une maison
+    // une fois qu'une maison a été trouvée on cherche la case en haut à gauche
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
-            if (*numMaison == -1) {
-                if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment >= 100) {
-                    *numMaison = plateau[y + i][x + j].batiment - 100;
-                    for (int k = 0; k < 3; k++) {
+            if (*numMaison == -1) { // si on a pas trouvé de maison
+                if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment >= 100) { // On a trouvé une maison
+                    *numMaison = plateau[y + i][x + j].batiment - 100;  // numMaison devient le numero de la maison trouvée
+                    for (int k = 0; k < 3; k++) {   // On change l'etat du plateau ou se situe la maison pour s'assurer que nous l'avons bien verifier avant
                         for (int l = 0; l < 3; l++) {
                             plateau[y + i + k][x + j + l].etat = 34;
                         }
                     }
                 }
-                if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment < 100) {
+                if (plateau[y + i][x + j].etat == 2 && plateau[y + i][x + j].batiment < 100) {  // tant que l'on a pas trouvé la case avec l'identitée de la maison
                     plateau[y + i][x + j].etat = 33;
                     rechercheMaison(numMaison, maison, x + j, y + j, plateau);
                 }
@@ -609,63 +610,50 @@ void rechercheMaison(int *numMaison, Maison maison[100], int x, int y, Case plat
 }
 
 
-void
-analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],
-                   int compteurDistance) {
-    int numMaisonTrouve = -1;
+void analyseChateauxEau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *chateaux, int x, int y, Maison maisons[100],
+                   int compteurDistance) {  // Programme qui analyse un chemin connecté à un chateau pour trouver les maison connecté un chateau
+    int numMaisonTrouve = -1;   // Variable d'un numero de maison connectée à un chateau
 
     for (int i = -1; i < 2; i++) {
-        for (int j = -1; j < 2; j++) {
-            if (i != j && i != -j) {
-                if (plateau[y + i][x + j].etat == 2) {
-                    rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, plateau);
-                    if (numMaisonTrouve != -1) {
-                        //plateau[numMaisonTrouve + 5][0].etat = 36;  // test
-                        // maisons[numMaisonTrouve].distanceChateau = compteurDistance;
-                        chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].numMaison = numMaisonTrouve;
-                        chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].distance = compteurDistance;
+        for (int j = -1; j < 2; j++) {  // on regarde tt les cases autour d'une route
+            if (i != j && i != -j) {    // On evite les coins
+                if (plateau[y + i][x + j].etat == 2) {  // Si on trouve une maison
+                    rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, plateau);  // On cherche son numero
+                    if (numMaisonTrouve != -1) { // Si on trouve le numero
+                        chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].numMaison = numMaisonTrouve;    // On met à jour un tableau de maison connecté à une central
+                        chateaux->tabMaisonAlim[chateaux->nbMaisonAlim].distance = compteurDistance;    // On met à jour la distance entre les 2
                         chateaux->nbMaisonAlim += 1;
-                        numMaisonTrouve = -1;
-                        //chateaux->tabMaisonAlim[0].numMaison = 2;
-                        //plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
+                        numMaisonTrouve = -1;   // On remet la variable à zero pour de futur recherche
                     }
-                    //chateaux.capaciteutilise += maison[numMaisonTrouve].eauNecessaire;
                 }
-                if (plateau[y + i][x + j].etat == 1) {
-                    plateau[y + i][x + j].etat = 22;
-                    analyseChateauxEau(plateau, chateaux, x + j, y + i, maisons, compteurDistance + 1);
+                if (plateau[y + i][x + j].etat == 1) {  // Si on trouve une route
+                    plateau[y + i][x + j].etat = 22;    // On la marque
+                    analyseChateauxEau(plateau, chateaux, x + j, y + i, maisons, compteurDistance + 1); // On poursuit la recherche
                 }
 
             }
         }
     }
-    //*MaisonTrouveNum = numMaisonTrouve;
 }
 
 
 void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int x, int y,
-                                    int nbChateauEau, Maison maison1[100]) {
+                                    int nbChateauEau, Maison maison1[100]) {    // On cherche tt les routes connectées à nos chateaux d'eau afin de pouvoir les parcourir pour trouver des maisons
 
-    //int compteurMaisonsTrouve = 0;
-    //chateaux[0].tabMaisonAlim[0].numMaison = -1;
 
-    for (int nb = 0; nb < nbChateauEau; nb++) {
-        x = chateaux[nb].numCaseX;
+    for (int nb = 0; nb < nbChateauEau; nb++) { // On étudie tt les chateaux
+        x = chateaux[nb].numCaseX;  // On part de la case en haut à gauche du chateau, case de reference
         y = chateaux[nb].numCaseY;
-        int compteur = 0;
+        int compteur = 0;   // Compteur qui va servir à ignorer les coins
         for (int i = -1; i < 5; i++) {
-            for (int j = -1; j < 7; j++) {
+            for (int j = -1; j < 7; j++) {  // On parcourt le terrain du chateau en regardant à coté
                 compteur++;
-                if (plateau[j + y][i + x].etat == 1 &&
-                    (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {
-                    //DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
-                    analyseChateauxEau(plateau, &chateaux[nb], x + i, y + j, maison1, 1);
-                    //DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
-                    //compteurMaisonsTrouve=0;
+                if (plateau[j + y][i + x].etat == 1 && (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {  // Si on trouve une route
+                    analyseChateauxEau(plateau, &chateaux[nb], x + i, y + j, maison1, 1);   // On va analyser le chemin
                 }
             }
         }
-        for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+        for (int i = 0; i < NB_CASE_HAUTEUR; i++) { // Une fois les routes analysées on les remet à l'etat d'origine
             for (int j = 0; j < NB_CASE_LARGEUR; j++) {
                 if (plateau[i][j].etat == 22) {
                     plateau[i][j].etat = 1;
@@ -680,46 +668,43 @@ void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEU
 
     int PPdistance = 9999; // plus petite distance
     int numMaisonPlusProche = -1;
-    for (int i = 0; i < nbChateauEau; i++) {
+    for (int i = 0; i < nbChateauEau; i++) {    // on initialise bien tt les maisons à un etat de verification 0 pour pouvoir les marquées une fois qu'on les a analysées
         for (int j = 0; j < 20; j++) {
             chateaux[i].tabMaisonAlim[j].verification = 0;
         }
     }
-
+    // On
     int compteur = 0;
     int sauvNumMaison = -1;
-    for (int i = 0; i < nbChateauEau; i++) {
-        while (compteur != chateaux[i].nbMaisonAlim) {
+    for (int i = 0; i < nbChateauEau; i++) {    // On étudie tt les chateaux
+        while (compteur != chateaux[i].nbMaisonAlim) {  // tant qu'on a pas étudié toutes les maisons connectées au chateau
 
             for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {
-                if (/*chateaux[i].tabMaisonAlim[j].distance < PPdistance && */
-                        chateaux[i].tabMaisonAlim[j].verification ==
-                        0) {
-                    if (chateaux[i].tabMaisonAlim[j].distance < PPdistance) {
+                if (chateaux[i].tabMaisonAlim[j].verification == 0) {
+                    if (chateaux[i].tabMaisonAlim[j].distance < PPdistance) {   // On cherche la maison avec le plus proche du chateau
                         PPdistance = chateaux[i].tabMaisonAlim[j].distance;
                         numMaisonPlusProche = chateaux[i].tabMaisonAlim[j].numMaison;
                         sauvNumMaison = j;
-                        //chateaux[i].tabMaisonAlim[j].verification = 1;
                     }
                 }
             }
             PPdistance = 9999;
-            chateaux[i].tabMaisonAlim[sauvNumMaison].verification = 1;
+            chateaux[i].tabMaisonAlim[sauvNumMaison].verification = 1;  // On marque la maison pour ne pas la reetudier
+
 
             if (numMaisonPlusProche != -1) {
-                if ((chateaux[i].capaciteMax - chateaux[i].capaciteutilise) >=
+                if ((chateaux[i].capaciteMax - chateaux[i].capaciteutilise) >=  // On donne les ressources necessaire à la maison la plus proche
                     maison1[numMaisonPlusProche].eauNecessaire - maison1[numMaisonPlusProche].eau) {
                     chateaux[i].capaciteutilise += (maison1[numMaisonPlusProche].eauNecessaire -
                                                     maison1[numMaisonPlusProche].eau);
                     maison1[numMaisonPlusProche].eau = maison1[numMaisonPlusProche].eauNecessaire;
-                    //plateau[maison1[numMaisonPlusProche].numCaseY][maison1[numMaisonPlusProche].numCaseX].etat = 77;    // test
                 }
             }
-            for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {
+            for (int j = 0; j < chateaux[i].nbMaisonAlim; j++) {    // On incrémente le compteur de maison alimenté
                 if (chateaux[i].tabMaisonAlim[j].verification)
                     compteur++;
             }
-            if (compteur != chateaux[i].nbMaisonAlim)
+            if (compteur != chateaux[i].nbMaisonAlim)   // Si le nombre de maisons alimentées n'est pas egale au nombre de maisons connectées on recommence
                 compteur = 0;
         }
     }
@@ -728,7 +713,7 @@ void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEU
 
 
 void analyseCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *electrivite, int x, int y, Maison maisons[100],
-                   int compteurDistance) {
+                   int compteurDistance) {  // Meme principe que pour l'eau
 
     int numMaisonTrouve = -1;
 
@@ -844,11 +829,12 @@ void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR
 
 
 void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souris souris1, int nbChateaux, int nbCentrales, Maison maison1[100], Central chateaux[20], Central electricite[20]){
+    // Fonction qui affiche les informations d'un batiment
 
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
         plateau[souris1.caseY][souris1.caseX].etat == 8) {//eau
-//DrawRectangleLines(1200,400,250,130,WHITE);
+
         for (int i = 0; i < nbChateaux; i++) {
             DrawText(TextFormat("Châteaux numero %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
             DrawText(TextFormat("Ressources : %d", chateaux[i].ressource), 1210 + i * 300, 500, 20, WHITE);
@@ -858,8 +844,8 @@ void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souri
         }
     }
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
-        plateau[souris1.caseY][souris1.caseX].etat == 7) {//elec
-//DrawRectangleLines(1200,400,250,130,WHITE);
+        plateau[souris1.caseY][souris1.caseX].etat == 7) {//electricite
+
         for (int i = 0; i < nbCentrales; i++) {
             DrawText(TextFormat("Centrale numero %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
             DrawText(TextFormat("Ressources : %d", electricite->ressource), 1210 + i * 300, 500, 20, WHITE);
@@ -871,9 +857,7 @@ void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souri
     }
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].batiment >= 100) {
-//DrawRectangleLines(1200,400,700,200,WHITE);
 
-        //for (int i = 0; i < nbMaisons; i++) {
         DrawText(TextFormat("Maison numéro %d", plateau[souris1.caseY][souris1.caseX].batiment -  100 + 1), 1210, 410, 20, WHITE);
         DrawText(TextFormat("Habitants : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].nbHabitants), 1210, 440, 20, WHITE);
         DrawText(TextFormat("Eau : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eau), 1210, 470, 20, WHITE);
@@ -884,7 +868,7 @@ void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souri
                  560, 20, WHITE);
         DrawText(TextFormat("Temps viable: %0.f", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].tempsDuPlacement), 1210,
                  590, 20, WHITE);
-        //}
+
     }
 }
 
