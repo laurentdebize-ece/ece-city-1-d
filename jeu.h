@@ -108,7 +108,7 @@ void dessinerVariables(Rectangle rec_monnaie, Rectangle rec_habitant, Rectangle 
 
 void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_cabane, Rectangle rec_routes_reset,
                                     Rectangle rec_construire_centrale, Rectangle rec_construire_chateau_d_eau,
-                                    Rectangle rec_construire_route);
+                                    Rectangle rec_construire_route, int dessiner, Rectangle parametres);
 
 void afficherEtatMonde(int monde, int afficher_message_reset_routes);
 

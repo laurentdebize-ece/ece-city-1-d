@@ -287,31 +287,25 @@ void dessinerVariables(Rectangle rec_monnaie, Rectangle rec_habitant, Rectangle 
              CheckCollisionPointRec(mouse_pos, rec_capa_eau) ? SKYBLUE : BLUE);
 }
 
-void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_cabane, Rectangle rec_routes_reset,
-                                    Rectangle rec_construire_centrale, Rectangle rec_construire_chateau_d_eau,
-                                    Rectangle rec_construire_route) {
-    DrawRectangleLinesEx(rec_construire_cabane, 5,
-                         CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
-    DrawText(TextFormat("Cabane"), 30, 920, 50, CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
+void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_cabane, Rectangle rec_routes_reset,Rectangle rec_construire_centrale, Rectangle rec_construire_chateau_d_eau,Rectangle rec_construire_route, int dessiner, Rectangle parametres) {
+    DrawRectangleLinesEx(parametres, 6, CheckCollisionPointRec(mouse_pos, parametres) ? LIGHTGRAY : WHITE);
+    DrawText("boite a outils", 1015, 718, 30, CheckCollisionPointRec(mouse_pos, parametres) ? LIGHTGRAY : WHITE);
+    if(dessiner){
+        DrawRectangleLinesEx(rec_construire_cabane, 5,CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
+        DrawText(TextFormat("Cabane"), 30, 920, 50, CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
 
-    DrawRectangleLinesEx(rec_routes_reset, 6, CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
-    DrawText(TextFormat("reset route"), 1020, 387, 25,
-             CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
+        DrawRectangleLinesEx(rec_routes_reset, 6, CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
+        DrawText(TextFormat("reset route"), 1020, 387, 25,CheckCollisionPointRec(mouse_pos, rec_routes_reset) ? LIGHTGRAY : GRAY);
 
-    DrawRectangleLinesEx(rec_construire_centrale, 5,
-                         CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
-    DrawText(TextFormat("Electricite"), 240, 920, 50,
-             CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
+        DrawRectangleLinesEx(rec_construire_centrale, 5,CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
+        DrawText(TextFormat("Electricite"), 240, 920, 50,CheckCollisionPointRec(mouse_pos, rec_construire_centrale) ? ORANGE : YELLOW);
 
-    DrawRectangleLinesEx(rec_construire_chateau_d_eau, 5,
-                         CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
-    DrawText(TextFormat("Eau"), 535, 920, 50,
-             CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
+        DrawRectangleLinesEx(rec_construire_chateau_d_eau, 5,CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
+        DrawText(TextFormat("Eau"), 535, 920, 50,CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau) ? SKYBLUE : BLUE);
 
-    DrawRectangleLinesEx(rec_construire_route, 5,
-                         CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
-    DrawText(TextFormat("Routes"), 655, 920, 50,
-             CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
+        DrawRectangleLinesEx(rec_construire_route, 5,CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
+        DrawText(TextFormat("Routes"), 655, 920, 50,CheckCollisionPointRec(mouse_pos, rec_construire_route) ? LIGHTGRAY : GRAY);
+    }
 }
 
 void afficherEtatMonde(int monde, int afficher_message_reset_routes) {

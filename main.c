@@ -55,7 +55,7 @@ souris souris1;
 int reset_routes;
 int afficher_message_reset_routes;
 int construire_routes;
-
+int dessiner;
 
 void mainJeu() {
     SetTargetFPS(30);
@@ -71,7 +71,7 @@ void mainJeu() {
     Rectangle rec_construire_route = {645, 915, 200, 55};
     Rectangle rec_routes_reset = {1000, 370, 180, 60};
     Rectangle aire_de_jeu = {20, 20, 45 * 20, 35 * 20};
-
+    Rectangle parametres = {1000, 700, 225, 60};
     Image ruine;
     Image terrain_vague;
     Image cabane;
@@ -197,21 +197,14 @@ void mainJeu() {
                 }
             }
         }
-        if (IsKeyPressed(KEY_ZERO )){
-            monde = 0;
-        }
-        if (IsKeyPressed(KEY_ONE)){
-            monde = 1;
-        }
-        if (IsKeyPressed(KEY_TWO)){
-            monde = 2;
-        }
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+            if(CheckCollisionPointRec(mouse_pos, parametres)){
+                dessiner = !dessiner;
+            }
             if (CheckCollisionPointRec(mouse_pos, rec_routes_reset)) {
                 afficher_message_reset_routes = !afficher_message_reset_routes;
             }
-
             if (CheckCollisionPointRec(mouse_pos, rec_yellow)) {
                 monde = 1;
             } else if (CheckCollisionPointRec(mouse_pos, rec_blue)) {
@@ -220,6 +213,12 @@ void mainJeu() {
         }
         if (IsKeyPressed(KEY_ZERO) || IsKeyPressed(KEY_ENTER)) {
             monde = 0;
+        }
+        if (IsKeyPressed(KEY_ONE)){
+            monde = 1;
+        }
+        if (IsKeyPressed(KEY_TWO)){
+            monde = 2;
         }
         if (IsKeyDown(KEY_BACKSPACE)) {
             reset_routes = true;
@@ -406,9 +405,8 @@ void mainJeu() {
         dessinerVariables(rec_monnaie, rec_habitant, rec_capa_elec, rec_capa_eau, mouse_pos, monnaie, habitant,
                           capa_elec, capa_eau);
 
-        dessinerCasesChoixConstruction(mouse_pos, rec_construire_cabane, rec_routes_reset,
-                                       rec_construire_centrale, rec_construire_chateau_d_eau,
-                                       rec_construire_route);
+        dessinerCasesChoixConstruction(mouse_pos, rec_construire_cabane, rec_routes_reset,rec_construire_centrale, rec_construire_chateau_d_eau,rec_construire_route, dessiner, parametres);
+
 
         afficherEtatMonde(monde, afficher_message_reset_routes);
 
