@@ -1,11 +1,11 @@
 #include "jeu.h"
 
 
-int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2, int *charger) {
-    Image menu;
+int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capitaliste, int *quitter2, int *charger) {//page du menu
+    Image menu;//récupération des images
     Image mode;
     Image credit;
-    InitWindow(1024, 768, "ECE city");
+    InitWindow(1024, 768, "ECE city");//Création de la fenetre
     InitAudioDevice();
     //Music musique1 = LoadMusicStream("../Musiques/the-simpsons-theme-song.mp3");
     //Music musique2 = LoadMusicStream("../Musiques/URSS.mp3");
@@ -15,7 +15,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
     //PlayMusicStream(musique1);
     SetTargetFPS(60);
     MaximizeWindow();
-    menu = LoadImage("../menu/menu2.png");
+    menu = LoadImage("../menu/menu2.png");//chargement des images
     mode = LoadImage("../menu/mode.png");
     credit = LoadImage("../menu/credits.png");
     ImageDrawPixel(&menu, 0, 0, RAYWHITE);
@@ -35,46 +35,45 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
         Vector2 mouse_pos = GetMousePosition();
         BeginDrawing();
         DrawTexture(texture, 0, 0, WHITE);
-        Rectangle rec_CREDIT = {748, 108, 238, 92};
+        Rectangle rec_CREDIT = {748, 108, 238, 92};//initialisation des rectangle servants comme boutons
         Rectangle rec_JOUER = {1038, 108, 238, 92};
         Rectangle rec_QUITTER = {1328, 108, 238, 92};
         Rectangle rec_SAUVEGARDE = {9, 30, 245, 99};
-        DrawRectangleLinesEx(rec_SAUVEGARDE, 4, CheckCollisionPointRec(mouse_pos, rec_SAUVEGARDE) ? SKYBLUE : GREEN);
+        DrawRectangleLinesEx(rec_SAUVEGARDE, 4, CheckCollisionPointRec(mouse_pos, rec_SAUVEGARDE) ? SKYBLUE : GREEN);//desssin des rectangle qui s'allument si on passe la souris dessus
         DrawRectangleLinesEx(rec_CREDIT, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : GREEN);
         DrawRectangleLinesEx(rec_JOUER, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : GREEN);
         DrawRectangleLinesEx(rec_QUITTER, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : GREEN);
 
-        if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (CheckCollisionPointRec(mouse_pos, rec_JOUER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {//si on clique sur jouer on ne charge pas une ancienne partie mais on en lance une nouvelle
             *charger = false;
             *jouer = true;
 
         }
-        if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (CheckCollisionPointRec(mouse_pos, rec_QUITTER) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {//si on clique sur quitter, c'est la fin de la partie
             *quitter = true;
-
         }
-        if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (CheckCollisionPointRec(mouse_pos, rec_CREDIT) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {//si on clique sur credits, les credits apparaissent
             *credits = true;
         }
-        if (CheckCollisionPointRec(mouse_pos, rec_SAUVEGARDE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        if (CheckCollisionPointRec(mouse_pos, rec_SAUVEGARDE) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {//si on clique sur charger on charge la derniere partie
             *charger = true;
             *jouer = true;
         }
-        if (*quitter == true) {
+        if (*quitter == true) {//si on clique sur quitter la fenetre se ferme
             CloseWindow();
         }
-        if (*jouer == true) {
+        if (*jouer == true) {//quand on lance une partie, on a le choix entre le mode communiste et capitaliste sur une nouvelle page
             DrawTexture(texture2, 0, 0, WHITE);
             Rectangle rec_COMMUNISTE = {95, 235, 620, 150};
             Rectangle rec_CAPITALISTE = {95, 585, 620, 150};
             DrawRectangleLinesEx(rec_COMMUNISTE, 4, CheckCollisionPointRec(mouse_pos, rec_CREDIT) ? SKYBLUE : WHITE);
             DrawRectangleLinesEx(rec_CAPITALISTE, 4, CheckCollisionPointRec(mouse_pos, rec_JOUER) ? SKYBLUE : WHITE);
-            if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE)){
+            if (CheckCollisionPointRec(mouse_pos, rec_COMMUNISTE)){//selon le rectangle au dessus du quel se trouve la souris, on lance une musique differente
                 //PauseMusicStream(musique1);
                 //UpdateMusicStream(musique1);
                 //PlayMusicStream(musique2);
                 //UpdateMusicStream(musique2);
-                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {//si on clique sur un des boutons, la partie se lance dans le mode choisi
                     *communiste = true;
                     mainJeu();
                 }
@@ -98,7 +97,7 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
                 //UpdateMusicStream(musique1);
             }
         }
-        if (*credits == true) {
+        if (*credits == true) {//affichage de la page des credits
             DrawTexture(texture3, 0, 0, WHITE);
             Rectangle rec_QUITTER2 = {57, 50, 130, 40};
             DrawRectangleLinesEx(rec_QUITTER2, 4, CheckCollisionPointRec(mouse_pos, rec_QUITTER) ? SKYBLUE : WHITE);
@@ -205,14 +204,14 @@ void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], in
 }
 
 void resetTimer(float *timer, int *monnaie, int habitant, int impots) {
-    if (*timer <= 0) {
+    if (*timer <= 0) {//quand le timer arrive a 0, on le remet a 15 car un cycle dure 15 secondes
         *timer = 15;
-        *monnaie += habitant * (impots);
+        *monnaie += habitant * (impots);//comme c une fin de cycle, on prélève les impots
     }
 }
 
 void chercherCaseDeLaSourie(int x, int y, int *caseX, int *caseY, bool *dansPlateau) {
-    if ((x >= 20 && x <= 920) && (y >= 20 && y <= 720)) {
+    if ((x >= 20 && x <= 920) && (y >= 20 && y <= 720)) {//selon les coordonées de la souris, on sait si on est dans la plateau ou non
         *dansPlateau = true;
     } else {
         *dansPlateau = false;
@@ -238,7 +237,7 @@ void chercherCaseDeLaSourie(int x, int y, int *caseX, int *caseY, bool *dansPlat
 }
 
 void initialiserPlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
-    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {//a chaque case on donne une longueur et une largeur
         for (int j = 0; j < NB_CASE_LARGEUR; j++) {
             plateau[i][j].largeur = LARGEUR_CASE;
             plateau[i][j].etat = 0;
@@ -260,15 +259,15 @@ void initialiserPlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
 
 void dessinerSourieCurseur(souris souris1) {
     if (souris1.interieurPlateau)
-        DrawRectangle(souris1.caseX * 20 + 20, souris1.caseY * 20 + 20, 20, 20, RED);
+        DrawRectangle(souris1.caseX * 20 + 20, souris1.caseY * 20 + 20, 20, 20, RED);//un carré rouge allume la case sur laquelle la souris se trouve si elle est dans le plateau
 }
 
 void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
-    Image terrain_vague;
+    Image terrain_vague;//on recupere l'image qui servira de fond pour le plateau
     terrain_vague = LoadImage("../batiments/fond_map.png");
     ImageResize(&terrain_vague, 20, 20);
     Texture2D texture6 = LoadTextureFromImage(terrain_vague);
-    for (int i = 0; i < 35; i++) {
+    for (int i = 0; i < 35; i++) {//pour chaque case du plateau on incruste cette image et on dessine un carré noir autour histoire de distainguer les différentes cases
         for (int j = 0; j < 45; j++) {
             if (plateau[i][j].etat == 0) {
                 DrawTexture(texture6, plateau[i][j].x, plateau[i][j].y, WHITE);
@@ -279,7 +278,7 @@ void dessinerBasePlateau(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     }
 }
 
-void dessinerCasesEtages(Rectangle rec_yellow, Rectangle rec_blue, Vector2 mouse_pos) {
+void dessinerCasesEtages(Rectangle rec_yellow, Rectangle rec_blue, Vector2 mouse_pos) {//on dessine des rectangles pour les boutons concernant les niveau
     DrawRectangleLinesEx(rec_yellow, 6, CheckCollisionPointRec(mouse_pos, rec_yellow) ? ORANGE : YELLOW);
     DrawRectangleLinesEx(rec_blue, 6, CheckCollisionPointRec(mouse_pos, rec_blue) ? SKYBLUE : BLUE);
     DrawText(TextFormat("Etage elec"), 1020, 117, 25, CheckCollisionPointRec(mouse_pos, rec_yellow) ? ORANGE : YELLOW);
@@ -287,7 +286,7 @@ void dessinerCasesEtages(Rectangle rec_yellow, Rectangle rec_blue, Vector2 mouse
 }
 
 void dessinerVariables(Rectangle rec_monnaie, Rectangle rec_habitant, Rectangle rec_capa_elec, Rectangle rec_capa_eau,
-                       Vector2 mouse_pos, int monnaie, int habitant, int capa_elec, int capa_eau) {
+                       Vector2 mouse_pos, int monnaie, int habitant, int capa_elec, int capa_eau) {//même chose pour les compteurs en haut a droite de l'écran
     DrawRectangleLinesEx(rec_monnaie, 4, CheckCollisionPointRec(mouse_pos, rec_monnaie) ? YELLOW : GOLD);
     DrawRectangleLinesEx(rec_habitant, 4, CheckCollisionPointRec(mouse_pos, rec_habitant) ? GREEN : LIME);
     DrawText(TextFormat("%d ECE Flouz", monnaie), 1670, 20, 20,
@@ -304,7 +303,7 @@ void dessinerVariables(Rectangle rec_monnaie, Rectangle rec_habitant, Rectangle 
 }
 
 void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_cabane, Rectangle rec_routes_reset,Rectangle rec_construire_centrale, Rectangle rec_construire_chateau_d_eau,Rectangle rec_construire_route, int dessiner, Rectangle parametres) {
-    DrawRectangleLinesEx(parametres, 6, CheckCollisionPointRec(mouse_pos, parametres) ? LIGHTGRAY : WHITE);
+    DrawRectangleLinesEx(parametres, 6, CheckCollisionPointRec(mouse_pos, parametres) ? LIGHTGRAY : WHITE);//même chose pour les cases de constructions de batiments et de routes
     DrawText("boite a outils", 1015, 718, 30, CheckCollisionPointRec(mouse_pos, parametres) ? LIGHTGRAY : WHITE);
     if(dessiner){
         DrawRectangleLinesEx(rec_construire_cabane, 5,CheckCollisionPointRec(mouse_pos, rec_construire_cabane) ? RED : BROWN);
@@ -325,7 +324,7 @@ void dessinerCasesChoixConstruction(Vector2 mouse_pos, Rectangle rec_construire_
 }
 
 void afficherEtatMonde(int monde, int afficher_message_reset_routes) {
-    if (monde != 0) {
+    if (monde != 0) {//selon le niveau dans lequel on se trouve, on affiche des informations pour une meilleure comprehension du joueur
         DrawText(TextFormat("Si vous voulez retourner \nau routes veuillez appuyer \nsur 'ENTER' et '0'"), 1000, 327,
                  10, WHITE);
     }
@@ -334,7 +333,7 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes) {
     } else if (monde == 2) {
         DrawText(TextFormat("Etage 2, eau"), 1000, 267, 50, BLUE);
     }
-    if (afficher_message_reset_routes) {
+    if (afficher_message_reset_routes) {//pareil si l'on souhaite enlever des routes
         DrawText(TextFormat(
                          "Appuyez sur 'BACKSPACE' \net suivez les instructions \n(verifiez d'avoir des routes)"), 1000,
                  460, 20, WHITE);
@@ -343,13 +342,13 @@ void afficherEtatMonde(int monde, int afficher_message_reset_routes) {
 
 
 void dessinertout(float timer, souris souris1) {
-    DrawText(TextFormat("timer: %.0f", timer), 840, 0, 20, WHITE);
+    DrawText(TextFormat("timer: %.0f", timer), 840, 0, 20, WHITE);// on dessine le timer en au dessus du plateau qui nous informe du temps restant avant un nouveau cycle
     dessinerSourieCurseur(souris1);
 }
 
 void initialiserbatiment(Maison batiment) {
 
-    Image ruine;
+    Image ruine;//on récupère, charge et assigne des variables pour chaque image qui servent à l'affichage des constructions
     Image terrain_vague;
     Image cabane;
     Image maison;
@@ -393,7 +392,7 @@ void initialiserbatiment(Maison batiment) {
 
 void miseajourtimer(Maison maison1[100], int nbMaisons) {
     for (int i = 0; i < nbMaisons; i++) {
-        if (maison1[i].vivable){
+        if (maison1[i].vivable){//si une maison est viable, on lance un timer comptant le temps depuis lequel cette maison est viable ce qui sert pour les évolutions
             maison1[i].tempsDuPlacement += GetFrameTime();
         }
         if (maison1[i].eau < maison1[i].eauNecessaire || maison1[i].electricite < maison1[i].electriciteNecessaire){
@@ -410,11 +409,11 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *c
             maison1[i].tempsDuPlacement = 0;
 
         }*/
-        if (maison1[i].tempsDuPlacement < 15) { // Terrain vague : 1000 ECE-flouz
+        if (maison1[i].tempsDuPlacement < 15) { // pour chaque niveau d'évolution, on vérifie si le temps de placement et les ressources nécessaires sont suffisantes
             maison1[i].evolution = 0;
-            maison1[i].fileName = "../batiments/Terrain_Vague1.png";
+            maison1[i].fileName = "../batiments/Terrain_Vague1.png";// on change ensuite d'image et on met à jour les informations sur le batiment
             maison1[i].nbHabitants = 0;
-            maison1[i].electriciteNecessaire = 0;
+            maison1[i].electriciteNecessaire = 0;//ressources nécessaires pour évoluer au niveau supérieur
             maison1[i].eauNecessaire = 0;
         }
         if (maison1[i].tempsDuPlacement >= 15 && maison1[i].evolution == 0 && maison1[i].eau >= maison1[i].eauNecessaire) {
@@ -479,7 +478,7 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *c
 }
 
 void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int *capa_elec, int *capa_eau) {
-    for (int i = 0; i < nbMaisons; i++) {
+    for (int i = 0; i < nbMaisons; i++) {//même chose mais cette fois pour la régression
         if (maison1[i].evolution == 4 && (maison1[i].eau <= 1000 || maison1[i].electricite <= 1000)) {
             maison1[i].evolution = 3;
             maison1[i].nbHabitants = 100;
@@ -833,7 +832,7 @@ void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souri
 
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
-        plateau[souris1.caseY][souris1.caseX].etat == 8) {//eau
+        plateau[souris1.caseY][souris1.caseX].etat == 8) {//informations des chateaux d'eau
 
         for (int i = 0; i < nbChateaux; i++) {
             DrawText(TextFormat("Châteaux numero %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
@@ -844,7 +843,7 @@ void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souri
         }
     }
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
-        plateau[souris1.caseY][souris1.caseX].etat == 7) {//electricite
+        plateau[souris1.caseY][souris1.caseX].etat == 7) {//informations des centrales électriques
 
         for (int i = 0; i < nbCentrales; i++) {
             DrawText(TextFormat("Centrale numero %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
@@ -856,7 +855,7 @@ void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souri
         }
     }
 
-    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].batiment >= 100) {
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].batiment >= 100) {//informations de la maison sélectionnée
 
         DrawText(TextFormat("Maison numéro %d", plateau[souris1.caseY][souris1.caseX].batiment -  100 + 1), 1210, 410, 20, WHITE);
         DrawText(TextFormat("Habitants : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].nbHabitants), 1210, 440, 20, WHITE);
