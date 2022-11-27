@@ -44,6 +44,7 @@ typedef struct {
     int prix;
     int distanceChateau;
     int distanceCentral;
+    int numBatiment;
 } Maison;
 
 
@@ -78,9 +79,9 @@ void resetTimer(float *timer, int *monnaie, int habitant, int impots);
 void initialiserPlateau(Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
 
 ///////////////////////////// Sauvegarde ///////////////////////////////////////////
-void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
+void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int argent, int eau, int elec, Maison maison1[100], Central chateaux[20], Central electricite[20]);
 
-void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]);
+void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int* argent, int* eau, int* elec, Maison maison1[100], Central chateaux[20], Central electricite[20]);
 
 
 //////////////////////////// Sourie ////////////////////////////////////////////////
@@ -136,5 +137,7 @@ void analyseCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *cen
 
 void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central central[20], int x, int y,
                                    int nbChateauEau, Maison maison1[100]);
+
+void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souris souris1, int nbChateaux, int nbCentrales, Maison maison1[100], Central chateaux[20], Central electricite[20]);
 
 #endif //BAC_A_SABLE_1_D_JEU_H

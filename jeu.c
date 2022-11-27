@@ -162,12 +162,17 @@ int mainMenu(int *jouer, int *quitter, int *credits, int *communiste, int *capit
 }
 
 
-void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
+void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int* argent, int* eau, int* elec, Maison maison1[100], Central chateaux[20], Central electricite[20]) {
     FILE *ifs = fopen(nomFichier, "r");
+    fscanf(ifs, "%d", argent);
+    fscanf(ifs, "%d", eau);
+    fscanf(ifs, "%d", elec);
+
 
     for (int i = 0; i < NB_CASE_HAUTEUR; ++i) {
         for (int j = 0; j < NB_CASE_LARGEUR; ++j) {
             fscanf(ifs, "%d", &tab[i][j].etat);
+            fscanf(ifs, "%d", &tab[i][j].batiment);
         }
     }
     printf("Fin fonction sauvegarde\n");
@@ -175,13 +180,24 @@ void liresauv(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
     fclose(ifs);
 }
 
-void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR]) {
+void sauvegarde(char *nomFichier, Case tab[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], int argent, int eau, int elec, Maison maison1[100], Central chateaux[20], Central electricite[20]) {
     FILE *ifs = fopen(nomFichier, "w");
+    fprintf(ifs, "%d", argent);
+    fprintf(ifs, "\n");
+    fprintf(ifs, "%d", eau);
+    fprintf(ifs, "\n");
+    fprintf(ifs, "%d", elec);
+    fprintf(ifs, "\n");
+
     for (int i = 0; i < NB_CASE_HAUTEUR; ++i) {
         for (int j = 0; j < NB_CASE_LARGEUR; ++j) {
             fprintf(ifs, "%d ", (tab[i][j].etat));
+            fprintf(ifs, "%d ", (tab[i][j].batiment));
+            if (tab[i][j].batiment >= 100){
+                fprintf(ifs, "%s", maison1[tab[i][j].batiment - 100].fileName = "../batiments/Terrain_Vague1.png");
+            }
+            fprintf(ifs, "\n");
         }
-        fprintf(ifs, "\n");
     }
     printf("Fin fonction sauvegarde\n");
 
@@ -826,4 +842,49 @@ void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR
     }
 }
 
+
+void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souris souris1, int nbChateaux, int nbCentrales, Maison maison1[100], Central chateaux[20], Central electricite[20]){
+
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
+        plateau[souris1.caseY][souris1.caseX].etat == 8) {//eau
+//DrawRectangleLines(1200,400,250,130,WHITE);
+        for (int i = 0; i < nbChateaux; i++) {
+            DrawText(TextFormat("Châteaux numero %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
+            DrawText(TextFormat("Ressources : %d", chateaux[i].ressource), 1210 + i * 300, 500, 20, WHITE);
+            DrawText(TextFormat("Capacité maximale : %d", chateaux[i].capaciteMax), 1210 + i * 300, 440, 20, WHITE);
+            DrawText(TextFormat("Capacité utilisée : %d", chateaux[i].capaciteutilise), 1210 + i * 300, 470, 20,
+                     WHITE);
+        }
+    }
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
+        plateau[souris1.caseY][souris1.caseX].etat == 7) {//elec
+//DrawRectangleLines(1200,400,250,130,WHITE);
+        for (int i = 0; i < nbCentrales; i++) {
+            DrawText(TextFormat("Centrale numero %d", i + 1), 1210 + i * 300, 410, 20, WHITE);
+            DrawText(TextFormat("Ressources : %d", electricite->ressource), 1210 + i * 300, 500, 20, WHITE);
+            DrawText(TextFormat("Capacité maximale : %d", electricite->capaciteMax), 1210 + i * 300, 440, 20,
+                     WHITE);
+            DrawText(TextFormat("Capacité utilisée : %d", electricite->capaciteutilise), 1210 + i * 300, 470, 20,
+                     WHITE);
+        }
+    }
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && plateau[souris1.caseY][souris1.caseX].batiment >= 100) {
+//DrawRectangleLines(1200,400,700,200,WHITE);
+
+        //for (int i = 0; i < nbMaisons; i++) {
+        DrawText(TextFormat("Maison numéro %d", plateau[souris1.caseY][souris1.caseX].batiment -  100 + 1), 1210, 410, 20, WHITE);
+        DrawText(TextFormat("Habitants : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].nbHabitants), 1210, 440, 20, WHITE);
+        DrawText(TextFormat("Eau : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eau), 1210, 470, 20, WHITE);
+        DrawText(TextFormat("Electricité : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].electricite), 1210, 500, 20,
+                 WHITE);
+        DrawText(TextFormat("Eau nécessaire : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].eauNecessaire), 1210, 530, 20, WHITE);
+        DrawText(TextFormat("Electricité nécessaire : %d", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].electriciteNecessaire), 1210,
+                 560, 20, WHITE);
+        DrawText(TextFormat("Temps viable: %0.f", maison1[plateau[souris1.caseY][souris1.caseX].batiment -  100].tempsDuPlacement), 1210,
+                 590, 20, WHITE);
+        //}
+    }
+}
 
