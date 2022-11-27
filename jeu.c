@@ -377,15 +377,17 @@ void initialiserbatiment(Maison batiment) {
 
 void miseajourtimer(Maison maison1[100], int nbMaisons) {
     for (int i = 0; i < nbMaisons; i++) {
-        if (maison1[i].vivable)
+        if (maison1[i].vivable){
             maison1[i].tempsDuPlacement += GetFrameTime();
-        if (maison1[i].eau < maison1[i].eauNecessaire)
-            maison1[i].tempsDuPlacement = 0;
+        }
+        if (maison1[i].eau < maison1[i].eauNecessaire || maison1[i].electricite < maison1[i].electriciteNecessaire){
+            maison1[i].tempsDuPlacement -= GetFrameTime();
+        }
     }
 }
 
 void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *capa_elec, int *habitant,
-                       Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int nbChateaux) {
+                       Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central chateaux[20], int nbChateaux, Central electricite[20]) {
     for (int i = 0; i < nbMaisons; i++) {
         /*if (maison1[i].tempsDuPlacement > 15) { // Terrain vague : 1000 ECE-flouz
             maison1[i].evolution++;
@@ -399,49 +401,54 @@ void evolutionbatiment(Maison maison1[100], int nbMaisons, int *capa_eau, int *c
             maison1[i].electriciteNecessaire = 0;
             maison1[i].eauNecessaire = 0;
         }
-        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].tempsDuPlacement < 15 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
+        if (maison1[i].tempsDuPlacement >= 15 && maison1[i].evolution == 0 && maison1[i].eau >= maison1[i].eauNecessaire) {
             maison1[i].evolution = 1;
             maison1[i].fileName = "../batiments/Cabane.png";
             maison1[i].nbHabitants = 10;
             maison1[i].electriciteNecessaire = 10;
             maison1[i].eauNecessaire = 10;
             rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+            rechercheRouteConnecteCentral(plateau, electricite, 0, 0, nbChateaux, maison1);
+
 
             *habitant += 10;
             *capa_elec -= 10;
             *capa_eau -= 10;
         }
-        if (maison1[i].tempsDuPlacement >= 30 && maison1[i].tempsDuPlacement < 30 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
+        if (maison1[i].tempsDuPlacement >= 30 && maison1[i].tempsDuPlacement < 30 + GetFrameTime()) {
             maison1[i].evolution = 2;
             maison1[i].fileName = "../batiments/Maison.png";
             maison1[i].nbHabitants = 50;
             maison1[i].electriciteNecessaire = 50;
             maison1[i].eauNecessaire = 50;
             rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+            rechercheRouteConnecteCentral(plateau, electricite, 0, 0, nbChateaux, maison1);
 
             *habitant += 40;
             *capa_elec -= 40;
             *capa_eau -= 40;
         }
-        if (maison1[i].tempsDuPlacement >= 45 && maison1[i].tempsDuPlacement < 45 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
+        if (maison1[i].tempsDuPlacement >= 45 && maison1[i].tempsDuPlacement < 45 + GetFrameTime()) {
             maison1[i].evolution = 3;
             maison1[i].fileName = "../batiments/Immeuble.png";
             maison1[i].nbHabitants = 100;
             maison1[i].electriciteNecessaire = 100;
             maison1[i].eauNecessaire = 100;
             rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+            rechercheRouteConnecteCentral(plateau, electricite, 0, 0, nbChateaux, maison1);
 
             *habitant += 50;
             *capa_elec -= 50;
             *capa_eau -= 50;
         }
-        if (maison1[i].tempsDuPlacement >= 60 && maison1[i].tempsDuPlacement < 60 + GetFrameTime() && maison1[i].eau>=maison1[i].eauNecessaire) {
+        if (maison1[i].tempsDuPlacement >= 60 && maison1[i].tempsDuPlacement < 60 + GetFrameTime()) {
             maison1[i].evolution = 4;
             maison1[i].fileName = "../batiments/Gratte_ciel.png";
             maison1[i].nbHabitants = 1000;
             maison1[i].electriciteNecessaire = 1000;
             maison1[i].eauNecessaire = 1000;
             rechercheRouteConnecteChateaux(plateau, chateaux, 0, 0, nbChateaux, maison1);
+            rechercheRouteConnecteCentral(plateau, electricite, 0, 0, nbChateaux, maison1);
 
             *habitant += 900;
             *capa_elec -= 900;
@@ -642,17 +649,18 @@ void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEU
                 }
             }
         }
-    }
-    for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
-        for (int j = 0; j < NB_CASE_LARGEUR; j++) {
-            if (plateau[i][j].etat == 22) {
-                plateau[i][j].etat = 1;
-            }
-            if (plateau[i][j].etat == 33 || plateau[i][j].etat == 34) {
-                plateau[i][j].etat = 2;
+        for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+            for (int j = 0; j < NB_CASE_LARGEUR; j++) {
+                if (plateau[i][j].etat == 22) {
+                    plateau[i][j].etat = 1;
+                }
+                if (plateau[i][j].etat == 33 || plateau[i][j].etat == 34) {
+                    plateau[i][j].etat = 2;
+                }
             }
         }
     }
+
 
     int PPdistance = 9999; // plus petite distance
     int numMaisonPlusProche = -1;
@@ -700,4 +708,122 @@ void rechercheRouteConnecteChateaux(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEU
         }
     }
 }
+
+
+
+void analyseCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *electrivite, int x, int y, Maison maisons[100],
+                   int compteurDistance) {
+
+    int numMaisonTrouve = -1;
+
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (i != j && i != -j) {
+                if (plateau[y + i][x + j].etat == 2) {
+                    rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, plateau);
+                    if (numMaisonTrouve != -1) {
+                        //plateau[numMaisonTrouve + 5][0].etat = 36;  // test
+                        // maisons[numMaisonTrouve].distanceChateau = compteurDistance;
+                        electrivite->tabMaisonAlim[electrivite->nbMaisonAlim].numMaison = numMaisonTrouve;
+                        electrivite->tabMaisonAlim[electrivite->nbMaisonAlim].distance = compteurDistance;
+                        electrivite->nbMaisonAlim += 1;
+                        numMaisonTrouve = -1;
+                        //chateaux->tabMaisonAlim[0].numMaison = 2;
+                        //plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
+                    }
+                    //chateaux.capaciteutilise += maison[numMaisonTrouve].eauNecessaire;
+                }
+                if (plateau[y + i][x + j].etat == 1) {
+                    plateau[y + i][x + j].etat = 22;
+                    analyseCentral(plateau, electrivite, x + j, y + i, maisons, compteurDistance + 1);
+                }
+
+            }
+        }
+    }
+    //*MaisonTrouveNum = numMaisonTrouve;
+}
+
+
+void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central electrivite[20], int x, int y,
+                                    int nbCentral, Maison maison1[100]) {
+
+    //int compteurMaisonsTrouve = 0;
+    //chateaux[0].tabMaisonAlim[0].numMaison = -1;
+
+    for (int nb = 0; nb < nbCentral; nb++) {
+        x = electrivite[nb].numCaseX;
+        y = electrivite[nb].numCaseY;
+        int compteur = 0;
+        for (int i = -1; i < 5; i++) {
+            for (int j = -1; j < 7; j++) {
+                compteur++;
+                if (plateau[j + y][i + x].etat == 1 &&
+                    (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {
+                    //DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
+                    analyseCentral(plateau, &electrivite[nb], x + i, y + j, maison1, 1);
+                    //DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
+                    //compteurMaisonsTrouve=0;
+                }
+            }
+        }
+        for (int i = 0; i < NB_CASE_HAUTEUR; i++) {
+            for (int j = 0; j < NB_CASE_LARGEUR; j++) {
+                if (plateau[i][j].etat == 22) {
+                    plateau[i][j].etat = 1;
+                }
+                if (plateau[i][j].etat == 33 || plateau[i][j].etat == 34) {
+                    plateau[i][j].etat = 2;
+                }
+            }
+        }
+    }
+
+    int PPdistance = 9999; // plus petite distance
+    int numMaisonPlusProche = -1;
+    for (int i = 0; i < nbCentral; i++) {
+        for (int j = 0; j < 20; j++) {
+            electrivite[i].tabMaisonAlim[j].verification = 0;
+        }
+    }
+
+    int compteur = 0;
+    int sauvNumMaison = -1;
+    for (int i = 0; i < nbCentral; i++) {
+        while (compteur != electrivite[i].nbMaisonAlim) {
+
+            for (int j = 0; j < electrivite[i].nbMaisonAlim; j++) {
+                if (/*chateaux[i].tabMaisonAlim[j].distance < PPdistance && */
+                        electrivite[i].tabMaisonAlim[j].verification ==
+                        0) {
+                    if (electrivite[i].tabMaisonAlim[j].distance < PPdistance) {
+                        PPdistance = electrivite[i].tabMaisonAlim[j].distance;
+                        numMaisonPlusProche = electrivite[i].tabMaisonAlim[j].numMaison;
+                        sauvNumMaison = j;
+                        //chateaux[i].tabMaisonAlim[j].verification = 1;
+                    }
+                }
+            }
+            PPdistance = 9999;
+            electrivite[i].tabMaisonAlim[sauvNumMaison].verification = 1;
+
+            if (numMaisonPlusProche != -1) {
+                if ((electrivite[i].capaciteMax - electrivite[i].capaciteutilise) >=
+                    maison1[numMaisonPlusProche].electriciteNecessaire - maison1[numMaisonPlusProche].electricite) {
+                    electrivite[i].capaciteutilise += (maison1[numMaisonPlusProche].electriciteNecessaire -
+                                                    maison1[numMaisonPlusProche].electricite);
+                    maison1[numMaisonPlusProche].electricite = maison1[numMaisonPlusProche].electriciteNecessaire;
+                    //plateau[maison1[numMaisonPlusProche].numCaseY][maison1[numMaisonPlusProche].numCaseX].etat = 77;    // test
+                }
+            }
+            for (int j = 0; j < electrivite[i].nbMaisonAlim; j++) {
+                if (electrivite[i].tabMaisonAlim[j].verification)
+                    compteur++;
+            }
+            if (compteur != electrivite[i].nbMaisonAlim)
+                compteur = 0;
+        }
+    }
+}
+
 
