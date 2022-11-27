@@ -247,7 +247,6 @@ void mainJeu() {
             }
         }
         if (CheckCollisionPointRec(mouse_pos, rec_construire_cabane)) {
-            //DrawRectangle(0,0,50,50,RED);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 veut_construire = 1;
 
@@ -255,19 +254,16 @@ void mainJeu() {
             }
         }
         if (CheckCollisionPointRec(mouse_pos, rec_construire_centrale)) {
-            //DrawRectangle(0,0,50,50,RED);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 veut_construire = 2;
             }
         }
         if (CheckCollisionPointRec(mouse_pos, rec_construire_chateau_d_eau)) {
-            //DrawRectangle(0,0,50,50,RED);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 veut_construire = 3;
             }
         }
         if (CheckCollisionPointRec(mouse_pos, rec_construire_route)) {
-            //DrawRectangle(0,0,50,50,RED);
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
                 veut_construire = 4;
             }
@@ -377,7 +373,6 @@ void mainJeu() {
             }
         } else if (IsKeyPressed(KEY_SPACE)) {
             veut_construire = nulle;
-            //info = !info;
         }
 
         afficherInfoBatiments(plateau, souris1, nbChateaux, nbCentrales, maison1, chateaux, electricite);
@@ -406,18 +401,8 @@ void mainJeu() {
         // regressionbatiment(maison1,nbMaisons,&habitant,&capa_eau,&capa_elec);
         //evolutionbatiment(maison1, nbMaisons, &capa_eau, &capa_elec, &habitant, plateau, chateaux, nbChateaux, electricite);
         //regressionbatiment(maison1,nbMaisons,&habitant,&capa_eau,&capa_elec);
-        /*for(int i = 0 ; i < nbMaisons ; i ++) {
-            if(maison1[i].vivable) {
-                maison1[i].tempsDuPlacement += GetFrameTime();
-                if (maison1[i].tempsDuPlacement >= 15){
-                    maison1[i].tempsDuPlacement = 0;
-                    maison1[i].evolution++;
-                }
-            }
-        }*/
 
-        //DrawText(TextFormat("%.0f", maison1[0].tempsDuPlacement), 1000, 650, 30, WHITE);
-        //DrawText(TextFormat("%.0f", maison1[1].tempsDuPlacement), 1100, 650, 30, WHITE);
+
         dessinertout(timer, souris1);
         EndDrawing();
 

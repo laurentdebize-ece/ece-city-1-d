@@ -512,9 +512,6 @@ void regressionbatiment(Maison maison1[100], int nbMaisons, int *habitant, int *
             maison1[i].tempsDuPlacement = 15;
         }
     }
-    /*for(int i = 0; i < maison1[i].nbHabitants; i++){
-        monnaie = monnaie + 10; //Chaque habitant verse 10 ECE-flouz à chaque fin de cycle de l’habitation qu’il occupe.
-    }*/
 }
 
 
@@ -722,16 +719,11 @@ void analyseCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *ele
                 if (plateau[y + i][x + j].etat == 2) {
                     rechercheMaison(&numMaisonTrouve, maisons, x + j, y + i, plateau);
                     if (numMaisonTrouve != -1) {
-                        //plateau[numMaisonTrouve + 5][0].etat = 36;  // test
-                        // maisons[numMaisonTrouve].distanceChateau = compteurDistance;
                         electrivite->tabMaisonAlim[electrivite->nbMaisonAlim].numMaison = numMaisonTrouve;
                         electrivite->tabMaisonAlim[electrivite->nbMaisonAlim].distance = compteurDistance;
                         electrivite->nbMaisonAlim += 1;
                         numMaisonTrouve = -1;
-                        //chateaux->tabMaisonAlim[0].numMaison = 2;
-                        //plateau[maisons[numMaisonTrouve].numCaseY][maisons[numMaisonTrouve].numCaseX].etat = 35;
                     }
-                    //chateaux.capaciteutilise += maison[numMaisonTrouve].eauNecessaire;
                 }
                 if (plateau[y + i][x + j].etat == 1) {
                     plateau[y + i][x + j].etat = 22;
@@ -741,15 +733,13 @@ void analyseCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central *ele
             }
         }
     }
-    //*MaisonTrouveNum = numMaisonTrouve;
 }
 
 
 void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], Central electrivite[20], int x, int y,
                                     int nbCentral, Maison maison1[100]) {
 
-    //int compteurMaisonsTrouve = 0;
-    //chateaux[0].tabMaisonAlim[0].numMaison = -1;
+
 
     for (int nb = 0; nb < nbCentral; nb++) {
         x = electrivite[nb].numCaseX;
@@ -760,10 +750,7 @@ void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR
                 compteur++;
                 if (plateau[j + y][i + x].etat == 1 &&
                     (compteur != 1 && compteur != 8 && compteur != 41 && compteur != 48)) {
-                    //DrawRectangle((i+x)*20 + 20, (j+y)*20 + 20, 20, 20, BLUE);
                     analyseCentral(plateau, &electrivite[nb], x + i, y + j, maison1, 1);
-                    //DrawText(TextFormat("%d", compteurMaisonsTrouve), 0, 0, 30, WHITE);
-                    //compteurMaisonsTrouve=0;
                 }
             }
         }
@@ -813,7 +800,6 @@ void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR
                     electrivite[i].capaciteutilise += (maison1[numMaisonPlusProche].electriciteNecessaire -
                                                     maison1[numMaisonPlusProche].electricite);
                     maison1[numMaisonPlusProche].electricite = maison1[numMaisonPlusProche].electriciteNecessaire;
-                    //plateau[maison1[numMaisonPlusProche].numCaseY][maison1[numMaisonPlusProche].numCaseX].etat = 77;    // test
                 }
             }
             for (int j = 0; j < electrivite[i].nbMaisonAlim; j++) {
@@ -828,7 +814,11 @@ void rechercheRouteConnecteCentral(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR
 
 
 void afficherInfoBatiments(Case plateau[NB_CASE_HAUTEUR][NB_CASE_LARGEUR], souris souris1, int nbChateaux, int nbCentrales, Maison maison1[100], Central chateaux[20], Central electricite[20]){
-    // Fonction qui affiche les informations d'un batiment
+
+    /**
+     * Fonction qui affiche les informations d'un batiment quand on maintient le bouton gauche de la souris dessus
+     */
+
 
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) &&
